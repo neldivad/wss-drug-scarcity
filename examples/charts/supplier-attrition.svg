@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980.0" height="571.0" viewBox="0 0 980.0 571.0" role="img" aria-label="Approved makers left per shorted drug">
+<title>Approved makers left per shorted drug</title>
+<desc>Dumbbell chart comparing products ever approved with products still marketed, for drugs in shortage.</desc>
+<rect width="980.0" height="571.0" fill="#fcfcfb"/>
+<text x="24.0" y="32.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="17" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">Q13 — why doesn't someone else just make it?</text>
+<text x="24.0" y="54.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">Every product ever approved to make each drug, against those still marketed. Decision this supports: which shortages</text>
+<text x="24.0" y="71.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">are a manufacturing problem and which are an exit problem — a drug whose makers all left will not be fixed by asking</text>
+<text x="24.0" y="88.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">the survivors to try harder.</text>
+<rect x="24.0" y="106.0" width="10" height="10" rx="2" fill="#6ba3e6"/>
+<text x="39.0" y="115.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="start" font-weight="normal" style="">ever approved</text>
+<rect x="136.9" y="106.0" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="151.9" y="115.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="start" font-weight="normal" style="">still marketed</text>
+<line x1="300.0" y1="133.0" x2="300.0" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="300.0" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">0</text>
+<line x1="391.1" y1="133.0" x2="391.1" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="391.1" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">25</text>
+<line x1="482.1" y1="133.0" x2="482.1" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="482.1" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">50</text>
+<line x1="573.2" y1="133.0" x2="573.2" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="573.2" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">75</text>
+<line x1="664.2" y1="133.0" x2="664.2" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="664.2" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">100</text>
+<line x1="755.3" y1="133.0" x2="755.3" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="755.3" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">125</text>
+<line x1="846.4" y1="133.0" x2="846.4" y2="497.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="846.4" y="515.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">150</text>
+<text x="575.0" y="533.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#898781" text-anchor="middle" font-weight="normal" style="">approved products</text>
+<line x1="300.0" y1="133.0" x2="300.0" y2="497.0" stroke="#c3c2b7" stroke-width="1"/>
+<line x1="300.0" y1="152.0" x2="361.9" y2="152.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="361.9" cy="152.0" r="5" fill="#6ba3e6"/>
+<circle cx="300.0" cy="152.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="156.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">cefotaxime</text>
+<text x="864.0" y="156.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">0 of 17</text>
+<line x1="314.6" y1="174.0" x2="438.4" y2="174.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="438.4" cy="174.0" r="5" fill="#6ba3e6"/>
+<circle cx="314.6" cy="174.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="178.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">bacitracin</text>
+<text x="864.0" y="178.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">4 of 38</text>
+<line x1="314.6" y1="196.0" x2="434.8" y2="196.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="434.8" cy="196.0" r="5" fill="#6ba3e6"/>
+<circle cx="314.6" cy="196.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="200.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">dopamine hydrochloride</text>
+<text x="864.0" y="200.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">4 of 37</text>
+<line x1="310.9" y1="218.0" x2="383.8" y2="218.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="383.8" cy="218.0" r="5" fill="#6ba3e6"/>
+<circle cx="310.9" cy="218.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="222.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">flurazepam hydrochloride</text>
+<text x="864.0" y="222.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">3 of 23</text>
+<line x1="325.5" y1="240.0" x2="482.1" y2="240.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="482.1" cy="240.0" r="5" fill="#6ba3e6"/>
+<circle cx="325.5" cy="240.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="244.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">meperidine hydrochloride</text>
+<text x="864.0" y="244.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">7 of 50</text>
+<line x1="398.3" y1="262.0" x2="850.0" y2="262.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="850.0" cy="262.0" r="5" fill="#6ba3e6"/>
+<circle cx="398.3" cy="262.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="266.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">propranolol hydrochloride</text>
+<text x="864.0" y="266.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">27 of 151</text>
+<line x1="318.2" y1="284.0" x2="398.3" y2="284.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="398.3" cy="284.0" r="5" fill="#6ba3e6"/>
+<circle cx="318.2" cy="284.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="288.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">fentanyl citrate</text>
+<text x="864.0" y="288.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">5 of 27</text>
+<line x1="398.3" y1="306.0" x2="664.2" y2="306.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="664.2" cy="306.0" r="5" fill="#6ba3e6"/>
+<circle cx="398.3" cy="306.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="310.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">methylprednisolone</text>
+<text x="864.0" y="310.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">27 of 100</text>
+<line x1="365.6" y1="328.0" x2="529.5" y2="328.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="529.5" cy="328.0" r="5" fill="#6ba3e6"/>
+<circle cx="365.6" cy="328.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="332.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">dexamethasone sodium phosphate</text>
+<text x="864.0" y="332.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">18 of 63</text>
+<line x1="321.9" y1="350.0" x2="376.5" y2="350.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="376.5" cy="350.0" r="5" fill="#6ba3e6"/>
+<circle cx="321.9" cy="350.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="354.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">quinapril hydrochloride</text>
+<text x="864.0" y="354.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">6 of 21</text>
+<line x1="434.8" y1="372.0" x2="769.9" y2="372.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="769.9" cy="372.0" r="5" fill="#6ba3e6"/>
+<circle cx="434.8" cy="372.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="376.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">promethazine hydrochloride</text>
+<text x="864.0" y="376.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">37 of 129</text>
+<line x1="376.5" y1="394.0" x2="565.9" y2="394.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="565.9" cy="394.0" r="5" fill="#6ba3e6"/>
+<circle cx="376.5" cy="394.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="398.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">lorazepam</text>
+<text x="864.0" y="398.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">21 of 73</text>
+<line x1="318.2" y1="416.0" x2="358.3" y2="416.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="358.3" cy="416.0" r="5" fill="#6ba3e6"/>
+<circle cx="318.2" cy="416.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="420.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">dobutamine hydrochloride</text>
+<text x="864.0" y="420.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">5 of 16</text>
+<line x1="336.4" y1="438.0" x2="412.9" y2="438.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="412.9" cy="438.0" r="5" fill="#6ba3e6"/>
+<circle cx="336.4" cy="438.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="442.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">cromolyn sodium</text>
+<text x="864.0" y="442.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">10 of 31</text>
+<line x1="402.0" y1="460.0" x2="591.4" y2="460.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="591.4" cy="460.0" r="5" fill="#6ba3e6"/>
+<circle cx="402.0" cy="460.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="464.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">morphine sulfate</text>
+<text x="864.0" y="464.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">28 of 80</text>
+<line x1="420.2" y1="482.0" x2="638.7" y2="482.0" stroke="#6ba3e6" stroke-width="2"/>
+<circle cx="638.7" cy="482.0" r="5" fill="#6ba3e6"/>
+<circle cx="420.2" cy="482.0" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="290.0" y="486.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">heparin sodium</text>
+<text x="864.0" y="486.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">33 of 93</text>
+<text x="24.0" y="545.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">Counts PRODUCTS (a strength and form), not firms, so this measures market exits rather than distinct companies — which is the point: it is immune to</text>
+<text x="24.0" y="559.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">renames and acquisitions. Cefotaxime is at zero and has been short since 2015.</text>
+</svg>

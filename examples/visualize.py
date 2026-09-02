@@ -9,9 +9,11 @@ you a number and sends you back for the names. So each figure names the
 drugs, gives their therapeutic class, and puts the decision in the subtitle.
 
   whats-short.svg        Q1  which drugs, how long, what class — the stockpile list
+  supplier-attrition.svg Q13 how many approved makers each shorted drug has left
   single-supplier.svg    Q7  drugs down to one listed package — the watchlist
   enforcement-year.svg   Q6  GMP import bans by year and origin — is the base shrinking
   shortage-duration.svg  Q2  deliberately empty until captures accrue
+  supplier-exits.svg     Q14 deliberately empty until the cohort source is active
 
 Charts read the derived table, never the raw archive. Stdlib only,
 deterministic: the same observations always produce the same bytes.
@@ -41,6 +43,11 @@ DEEMPH = "#d5d4cc"
 # Categorical slots, fixed order, never cycled. A 6th class folds into "other".
 SLOTS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"]
 OTHER = "#8a8880"
+# One hue, two shades, for the before/after dumbbell. Validated as an ordinal
+# ramp: monotone lightness, visible step gap, light end clears the surface
+# (#9ec5f4 failed that last check at 1.74:1).
+HUE = SLOTS[0]
+HUE_SOFT = "#6ba3e6"
 FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif'
 
 # Q1's context number. NOT in the derived table: it describes every marketed
@@ -72,6 +79,18 @@ def state(obs, source: str, metric: str) -> dict[str, str]:
         if prev is None or r["observed_at"] > prev[0]:
             best[r["entity_id"]] = (r["observed_at"], r["value"])
     return {k: v for k, (_, v) in best.items()}
+
+
+def capture_days(obs, source: str) -> int:
+    """Distinct capture DAYS, not distinct observed_at.
+
+    Each endpoint carries its own fetch time, so counting timestamps counts
+    endpoints — a 275-endpoint source would report "438 captures" after two
+    runs. The same paging trap as `state()`; it bites anywhere a capture is
+    counted rather than looked up.
+    """
+    return len({r["observed_at"][:10] for r in obs
+                if r["source_id"] == source})
 
 
 def last_seen(obs, source: str) -> str:
@@ -379,9 +398,112 @@ def q6_enforcement(obs) -> str:
     return f"{out.relative_to(REPO)} — {len(years)} years, {total} firms"
 
 
+def q13_attrition(obs) -> str:
+    """How much of each shorted drug's approved supply base is left.
+
+    A dumbbell: before and after per item is exactly what this is — everyone
+    ever approved to make it, against everyone still making it.
+    """
+    src = "fda.drugsfda.cohort-status"
+    short = {e.split("/", 1)[0].replace("drug:", "")
+             for e, v in state(obs, "fda.shortages.current", "status_code").items()
+             if v == "1"}
+    marketed = state(obs, src, "products_marketed")
+    ever = state(obs, src, "products_ever")
+
+    rows = []
+    for entity, ever_value in ever.items():
+        molecule = entity.replace("molecule:", "")
+        if int(ever_value) < 10:
+            continue
+        if not any(drug.startswith(molecule) for drug in short):
+            continue
+        rows.append((molecule, int(marketed.get(entity, 0)), int(ever_value)))
+
+    # "cefotaxime" and "cefotaxime-sodium" are the same supply base counted
+    # twice; keep the shorter name when one is a prefix of the other and the
+    # numbers agree.
+    rows.sort(key=lambda r: (len(r[0]), r[0]))
+    kept: list[tuple[str, int, int]] = []
+    for row in rows:
+        if any(row[0].startswith(k[0]) and (row[1], row[2]) == (k[1], k[2])
+               for k in kept):
+            continue
+        kept.append(row)
+    kept.sort(key=lambda r: (r[1] / r[2], r[0]))
+    kept = kept[:16]
+
+    width, left, right = 980.0, 300.0, 130.0
+    row_h = 22.0
+    body = [txt(24, 32, "Q13 — why doesn't someone else just make it?",
+                size=17, fill=INK, weight="600")]
+    lead, dy = para(24, 54, "Every product ever approved to make each drug, "
+                    "against those still marketed. Decision this supports: "
+                    "which shortages are a manufacturing problem and which are "
+                    "an exit problem — a drug whose makers all left will not be "
+                    "fixed by asking the survivors to try harder.",
+                    size=12, fill=INK2, chars=118)
+    body += lead
+    legend_y = 54 + dy + 10
+    top_y = legend_y + 30
+    plot_bottom = top_y + len(kept) * row_h
+    height = plot_bottom + 74
+    vmax = max(r[2] for r in kept)
+    span = width - left - right
+
+    body += legend([("ever approved", HUE_SOFT), ("still marketed", HUE)],
+                   24, legend_y)
+
+    tick = 0
+    step = 25 if vmax > 60 else 10
+    while tick <= vmax:
+        gx = left + tick / vmax * span
+        body.append(f'<line x1="{gx:.1f}" y1="{top_y - 12}" x2="{gx:.1f}" '
+                    f'y2="{plot_bottom}" stroke="{GRID}" stroke-width="1"/>')
+        body.append(txt(gx, plot_bottom + 18, str(tick), size=10, fill=MUTED,
+                        anchor="middle", tab=True))
+        tick += step
+    body.append(txt(left + span / 2, plot_bottom + 36, "approved products",
+                    size=11, fill=MUTED, anchor="middle"))
+    body.append(f'<line x1="{left}" y1="{top_y - 12}" x2="{left}" '
+                f'y2="{plot_bottom}" stroke="{BASELINE}" stroke-width="1"/>')
+
+    for i, (molecule, mk, ev) in enumerate(kept):
+        y = top_y + i * row_h + row_h / 2 - 4
+        x_ever = left + ev / vmax * span
+        x_now = left + mk / vmax * span
+        body.append(f'<line x1="{x_now:.1f}" y1="{y:.1f}" x2="{x_ever:.1f}" '
+                    f'y2="{y:.1f}" stroke="{HUE_SOFT}" stroke-width="2"/>')
+        body.append(f'<circle cx="{x_ever:.1f}" cy="{y:.1f}" r="5" '
+                    f'fill="{HUE_SOFT}"/>')
+        # 2px surface ring so the two marks stay distinct where they overlap
+        body.append(f'<circle cx="{x_now:.1f}" cy="{y:.1f}" r="5" '
+                    f'fill="{HUE}" stroke="{SURFACE}" stroke-width="2"/>')
+        name = molecule.replace("-", " ")
+        name = name if len(name) <= 40 else name[:39] + "…"
+        body.append(txt(left - 10, y + 4, name, size=11, fill=INK2,
+                        anchor="end"))
+        body.append(txt(left + span + 14, y + 4, f"{mk} of {ev}", size=11,
+                        fill=INK, weight="600", tab=True))
+
+    foot, _ = para(24, height - 26,
+                   "Counts PRODUCTS (a strength and form), not firms, so this "
+                   "measures market exits rather than distinct companies — "
+                   "which is the point: it is immune to renames and "
+                   "acquisitions. Cefotaxime is at zero and has been short "
+                   "since 2015.", size=10, fill=MUTED, chars=150, leading=14)
+    body += foot
+    out = OUT_DIR / "supplier-attrition.svg"
+    out.write_text(wrap(width, height, "Approved makers left per shorted drug",
+                        "Dumbbell chart comparing products ever approved with "
+                        "products still marketed, for drugs in shortage.",
+                        "\n".join(body)), encoding="utf-8")
+    return f"{out.relative_to(REPO)} — {len(kept)} molecules"
+
+
 def q2_placeholder(obs) -> str:
     src = "fda.shortages.current"
-    captures = len({r["observed_at"] for r in obs if r["source_id"] == src})
+    captures = capture_days(obs, src)
     width, height = 980, 250
     body = [
         txt(24, 32, "Q2 — shortages that ended, and how long they took",
@@ -408,13 +530,50 @@ def q2_placeholder(obs) -> str:
     return f"{out.relative_to(REPO)} — placeholder, {captures} capture(s)"
 
 
+def q14_placeholder(obs) -> str:
+    """Supplier-exit timing — needs the cohort source active."""
+    src = "fda.drugsfda.cohort-status"
+    captures = capture_days(obs, src)
+    molecules = len({r["entity_id"] for r in obs if r["source_id"] == src})
+    width, height = 980, 262
+    body = [
+        txt(24, 32, "Q14 — do suppliers leave before a shortage, or after it?",
+            size=17, fill=INK, weight="600"),
+        txt(24, 54, "Deliberately empty.", size=12, fill=INK2),
+        f'<rect x="24" y="76" width="{width - 48}" height="132" rx="6" '
+        f'fill="#f4f3ee"/>',
+        txt(width / 2, 116, f"{molecules} cohort molecules have a baseline, "
+            f"from {captures} day(s) of capture. A level, not yet a trend.",
+            size=13, fill=INK2, anchor="middle"),
+        txt(width / 2, 142, "Drugs@FDA gives each product's CURRENT marketing "
+            "status and no discontinuation date — not in the API, and not in "
+            "FDA's own bulk file.", size=12, fill=MUTED, anchor="middle"),
+        txt(width / 2, 164, "Sampling it monthly is what turns an exit into a "
+            "dated event. Nothing published can backfill it.", size=12,
+            fill=MUTED, anchor="middle"),
+        txt(width / 2, 186, "The source is written and paused; flipping "
+            "status: active starts the series.", size=12, fill=MUTED,
+            anchor="middle"),
+        txt(24, height - 14, "Q13 shows how far attrition has already gone. "
+            "This one asks when it happened, and only capture answers that.",
+            size=10, fill=MUTED),
+    ]
+    out = OUT_DIR / "supplier-exits.svg"
+    out.write_text(wrap(width, height, "Supplier exit timing — not yet answerable",
+                        "Placeholder explaining that dating supplier exits "
+                        "requires the cohort source to be active.",
+                        "\n".join(body)), encoding="utf-8")
+    return f"{out.relative_to(REPO)} — placeholder, {molecules} molecules"
+
+
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     obs = rows()
     if not obs:
         raise SystemExit("no observations — run `wss derive` first")
-    for line in (q1_whats_short(obs), q7_single_supplier(obs),
-                 q6_enforcement(obs), q2_placeholder(obs)):
+    for line in (q1_whats_short(obs), q13_attrition(obs),
+                 q7_single_supplier(obs), q6_enforcement(obs),
+                 q2_placeholder(obs), q14_placeholder(obs)):
         print(line)
 
 

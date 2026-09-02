@@ -206,6 +206,14 @@ carries their therapeutic class, and states the decision it supports.
 and analgesia dominate the eight-year-plus tail, and every drug on it is an
 injectable. Supports: what to hold buffer stock of.
 
+![Approved makers left per shorted drug](examples/charts/supplier-attrition.svg)
+
+**Q13 — the answer to "why doesn't someone else just make it".** Every product
+ever approved against those still marketed. Cefotaxime is at **zero of 17** and
+has been short since 2015; dopamine has 4 of 37 left. Supports: telling a
+manufacturing problem from an exit problem, because a drug whose makers all
+left will not be fixed by asking the survivors to try harder.
+
 ![Drugs down to one listed package](examples/charts/single-supplier.svg)
 
 **Q7.** Six named drugs are down to a single listed package. Supports: which
@@ -222,8 +230,12 @@ read Q12 first.
 
 ![Shortage duration, deliberately empty](examples/charts/shortage-duration.svg)
 
-**Q2, deliberately empty.** No shortage has begun and ended inside this record
-yet, and no archive anywhere can backfill it. The figure fills itself in.
+![Supplier exit timing, deliberately empty](examples/charts/supplier-exits.svg)
+
+**Q2 and Q14, deliberately empty.** No shortage has begun and ended inside this
+record yet, and no supplier exit has been dated. Neither can be backfilled from
+anything published. Both figures fill themselves in as captures accrue — which
+is the entire proposition, so they ship visible rather than omitted.
 
 Palette is the dataviz reference instance, categorical slots in fixed order,
 validated rather than eyeballed — all checks pass with a contrast warning on
