@@ -57,6 +57,11 @@ members:
   - established
   metric_value: 3.0
   created_at: ''
+- entity_id: AMPHETAMINE ASPARTATE MONOHYDRATE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2022-10-12'
 - entity_id: AMPICILLIN SODIUM
   paths:
   - new_entrant
@@ -78,6 +83,11 @@ members:
   - new_entrant
   metric_value: 4.0
   created_at: '2026-02-24'
+- entity_id: ASPIRIN
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-07-23'
 - entity_id: ATROPINE SULFATE
   paths:
   - new_entrant
@@ -88,6 +98,11 @@ members:
   - new_entrant
   metric_value: 1.0
   created_at: '2020-12-18'
+- entity_id: AZELASTINE HYDROCHLORIDE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-09-04'
 - entity_id: AZITHROMYCIN
   paths:
   - new_entrant
@@ -108,6 +123,11 @@ members:
   - new_entrant
   metric_value: 1.0
   created_at: '2026-01-27'
+- entity_id: BETAMETHASONE ACETATE
+  paths:
+  - established
+  metric_value: 4.0
+  created_at: ''
 - entity_id: BIVALIRUDIN
   paths:
   - established
@@ -232,6 +252,16 @@ members:
   - new_entrant
   metric_value: null
   created_at: '2026-02-10'
+- entity_id: CHLORPROMAZINE
+  paths:
+  - established
+  metric_value: 3.0
+  created_at: ''
+- entity_id: CILASTATIN SODIUM
+  paths:
+  - established
+  metric_value: 6.0
+  created_at: ''
 - entity_id: CIPROFLOXACIN
   paths:
   - established
@@ -267,7 +297,7 @@ members:
   paths:
   - new_entrant
   metric_value: null
-  created_at: '2025-10-07'
+  created_at: '2025-11-03'
 - entity_id: CONIVAPTAN HYDROCHLORIDE
   paths:
   - new_entrant
@@ -330,6 +360,11 @@ members:
   - new_entrant
   metric_value: 1.0
   created_at: '2026-05-27'
+- entity_id: DESFLURANE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-07-02'
 - entity_id: DESMOPRESSIN ACETATE
   paths:
   - new_entrant
@@ -355,6 +390,12 @@ members:
   - established
   metric_value: 4.0
   created_at: ''
+- entity_id: DEXTROSE
+  paths:
+  - new_entrant
+  - established
+  metric_value: null
+  created_at: '2022-03-01'
 - entity_id: DIAZEPAM
   paths:
   - established
@@ -411,11 +452,21 @@ members:
   - new_entrant
   metric_value: null
   created_at: '2026-01-12'
+- entity_id: DOXYLAMINE SUCCINATE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-01-12'
 - entity_id: ECHOTHIOPHATE IODIDE
   paths:
   - new_entrant
   metric_value: null
   created_at: '2019-09-24'
+- entity_id: ELBASVIR
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-10-17'
 - entity_id: EMTRICITABINE
   paths:
   - new_entrant
@@ -432,6 +483,12 @@ members:
   - new_entrant
   metric_value: 3.0
   created_at: '2025-11-07'
+- entity_id: EPINEPHRINE BITARTRATE
+  paths:
+  - new_entrant
+  - established
+  metric_value: 2.0
+  created_at: '2018-02-20'
 - entity_id: EPTIFIBATIDE
   paths:
   - established
@@ -611,11 +668,21 @@ members:
   - new_entrant
   metric_value: 2.0
   created_at: '2017-11-14'
+- entity_id: HOMATROPINE METHYLBROMIDE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-09-11'
 - entity_id: HYDROCHLOROTHIAZIDE
   paths:
   - new_entrant
   metric_value: null
   created_at: '2025-11-19'
+- entity_id: HYDROCORTISONE ACETATE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-07-23'
 - entity_id: HYDROCORTISONE SODIUM SUCCINATE
   paths:
   - established
@@ -662,6 +729,11 @@ members:
   - new_entrant
   metric_value: 1.0
   created_at: '2026-06-12'
+- entity_id: IMIPENEM
+  paths:
+  - new_entrant
+  metric_value: 1.0
+  created_at: '2026-01-08'
 - entity_id: INSULIN GLARGINE
   paths:
   - new_entrant
@@ -765,6 +837,16 @@ members:
   - established
   metric_value: 4.0
   created_at: ''
+- entity_id: LEVOTHYROXINE SODIUM
+  paths:
+  - established
+  metric_value: 3.0
+  created_at: ''
+- entity_id: LIDOCAINE
+  paths:
+  - established
+  metric_value: 3.0
+  created_at: ''
 - entity_id: LIDOCAINE HYDROCHLORIDE
   paths:
   - established
@@ -786,6 +868,11 @@ members:
   - new_entrant
   metric_value: null
   created_at: '2023-07-14'
+- entity_id: LOPINAVIR
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-07-24'
 - entity_id: LORAZEPAM
   paths:
   - new_entrant
@@ -801,6 +888,11 @@ members:
   - new_entrant
   metric_value: null
   created_at: '2026-01-20'
+- entity_id: MEMANTINE HYDROCHLORIDE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-06-15'
 - entity_id: MEPERIDINE HYDROCHLORIDE
   paths:
   - established
@@ -915,6 +1007,11 @@ members:
   - established
   metric_value: 15.0
   created_at: ''
+- entity_id: MONTELUKAST SODIUM
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-11-17'
 - entity_id: MORPHINE SULFATE
   paths:
   - established
@@ -1021,7 +1118,7 @@ members:
   paths:
   - new_entrant
   metric_value: null
-  created_at: '2025-09-11'
+  created_at: '2025-11-03'
 - entity_id: PACLITAXEL
   paths:
   - established
@@ -1151,6 +1248,11 @@ members:
   - established
   metric_value: 3.0
   created_at: ''
+- entity_id: PROGESTERONE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-03-27'
 - entity_id: PROMETHAZINE HYDROCHLORIDE
   paths:
   - established
@@ -1176,7 +1278,7 @@ members:
   paths:
   - new_entrant
   metric_value: null
-  created_at: '2023-01-19'
+  created_at: '2025-10-01'
 - entity_id: RAMELTEON
   paths:
   - new_entrant
@@ -1229,6 +1331,16 @@ members:
   - new_entrant
   metric_value: 2.0
   created_at: '2018-03-23'
+- entity_id: SALMETEROL XINAFOATE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-07-27'
+- entity_id: SCOPOLAMINE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-11-03'
 - entity_id: SEMAGLUTIDE
   paths:
   - new_entrant
@@ -1239,21 +1351,47 @@ members:
   - new_entrant
   metric_value: 1.0
   created_at: '2016-02-03'
+- entity_id: SODIUM ASCORBATE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2026-08-13'
 - entity_id: SODIUM BICARBONATE
   paths:
   - new_entrant
   metric_value: 2.0
   created_at: '2017-03-01'
+- entity_id: SODIUM CHLORIDE
+  paths:
+  - new_entrant
+  metric_value: null
+  created_at: '2025-12-03'
 - entity_id: SODIUM FLUORIDE F-18
   paths:
   - established
   metric_value: 6.0
+  created_at: ''
+- entity_id: SODIUM LACTATE
+  paths:
+  - new_entrant
+  - established
+  metric_value: null
+  created_at: '2026-08-03'
+- entity_id: SODIUM NITROPRUSSIDE
+  paths:
+  - established
+  metric_value: 3.0
   created_at: ''
 - entity_id: SODIUM OXYBATE
   paths:
   - new_entrant
   metric_value: null
   created_at: '2025-12-29'
+- entity_id: SODIUM PHOSPHATE
+  paths:
+  - established
+  metric_value: 3.0
+  created_at: ''
 - entity_id: SOMATROPIN
   paths:
   - new_entrant
@@ -1289,14 +1427,25 @@ members:
   - established
   metric_value: 14.0
   created_at: ''
+- entity_id: SULBACTAM SODIUM
+  paths:
+  - established
+  metric_value: 4.0
+  created_at: ''
 - entity_id: SULCONAZOLE NITRATE
   paths:
   - new_entrant
   metric_value: null
   created_at: '2026-05-08'
+- entity_id: SULFAMETHOXAZOLE
+  paths:
+  - established
+  metric_value: 9.0
+  created_at: ''
 - entity_id: SUMATRIPTAN
   paths:
   - established
+  - new_entrant
   metric_value: 8.0
   created_at: ''
 - entity_id: TAFAMIDIS MEGLUMINE

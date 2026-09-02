@@ -22,7 +22,8 @@ from wss import derive
 
 PARSER_VERSION = "1"
 
-_NAME_RE = re.compile(r'products\.active_ingredients\.name:"([^"]+)"')
+_NAME_RE = re.compile(
+    r'products\.active_ingredients\.name(?:\.exact)?:"([^"]+)"')
 # Slots are stable metric names; a status FDA stops using must keep its column.
 _METRIC = {
     "discontinued": "products_discontinued",

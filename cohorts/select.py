@@ -22,6 +22,33 @@ at-risk one: injectable generics, short or not, followed forever.
 `entity_id` is the UPPERCASE active-ingredient string used to query Drugs@FDA,
 verified to resolve before it is written. Ingredient names are messy and an
 unverified one silently captures nothing.
+
+COMBINATION PRODUCTS. FDA names a combination shortage by concatenating its
+ingredients ("AMPICILLIN SODIUM SULBACTAM SODIUM"), which matches no single
+`active_ingredients.name` and resolves to nothing. Rather than dropping them,
+each is retried against the sub-phrases of its name and represented by the
+one that resolves to the FEWEST products — the most specific ingredient, so
+SULBACTAM SODIUM rather than AMPICILLIN.
+
+`.exact` is the GATE, substring is the QUERY, and the distinction matters
+both ways:
+
+  - A substring match rewards meaningless fragments. "Fewest products" picked
+    AMINO out of AMINO ACID and MONOHYDRATE out of DEXTROSE MONOHYDRATE,
+    because rare fragments match few things. So a sub-phrase is only accepted
+    if `.exact` says it is genuinely an ingredient name.
+  - But `.exact` alone over-rejects. CEFOTAXIME is not an exact ingredient
+    name — the ingredient is CEFOTAXIME SODIUM — so exact-only dropped the
+    one drug in this repo with 100% supplier attrition. A full name that
+    matches loosely is therefore kept as-is; only *fragments* need the gate.
+
+On real ingredient names the two agree exactly (ATROPINE SULFATE: 71 either
+way), so querying loosely costs nothing.
+
+It is still a proxy for a combination: SULBACTAM SODIUM counts every product
+whose ingredient is sulbactam sodium, which is nearly but not exactly the
+ampicillin combination. A supplier-base trend for a closely related product
+set, not an exact count for the combination itself.
 """
 from __future__ import annotations
 
@@ -102,11 +129,60 @@ def ingredient_of(name: str) -> str:
     return re.sub(r"\s+", " ", s).strip().upper()
 
 
-def resolves(ingredient: str) -> bool:
+def product_count(ingredient: str, exact: bool = False) -> int | None:
+    """Total products for an ingredient, or None if the name resolves to nothing.
+
+    `exact=True` asks whether the string IS an ingredient name, which is how
+    fragments like MONOHYDRATE are rejected.
+    """
+    field = "products.active_ingredients.name"
+    if exact:
+        field += ".exact"
     d = api("https://api.fda.gov/drug/drugsfda.json", [
-        ("search", f'products.active_ingredients.name:"{ingredient}"'),
+        ("search", f'{field}:"{ingredient}"'),
         ("count", "products.marketing_status")])
-    return bool(d.get("results"))
+    results = d.get("results")
+    if not results:
+        return None
+    return sum(int(r.get("count", 0)) for r in results)
+
+
+def sub_phrases(name: str) -> list[str]:
+    """Contiguous word runs, longest first — candidate ingredients in a combo."""
+    words = name.split()
+    if len(words) < 2:
+        return []
+    out = []
+    for size in range(len(words) - 1, 0, -1):
+        for start in range(len(words) - size + 1):
+            phrase = " ".join(words[start:start + size])
+            if phrase != name:
+                out.append(phrase)
+    return out
+
+
+def resolve_ingredient(name: str) -> tuple[str, int] | None:
+    """The queryable ingredient for a molecule, and its product count.
+
+    The full name first, loosely — CEFOTAXIME finds cefotaxime sodium, and a
+    full name cannot be a fragment. Failing that, the sub-phrase that is a
+    real ingredient (`.exact`) and resolves to the fewest products: the most
+    specific ingredient in a combination, and the closest available proxy for
+    the combination itself.
+    """
+    total = product_count(name)
+    if total is not None:
+        return name, total
+    best: tuple[str, int] | None = None
+    for phrase in sub_phrases(name):
+        if len(phrase) < 5:
+            continue
+        if product_count(phrase, exact=True) is None:
+            continue  # a fragment, not an ingredient name
+        count = product_count(phrase)
+        if count is not None and (best is None or count < best[1]):
+            best = (phrase, count)
+    return best
 
 
 def main() -> None:
@@ -138,20 +214,45 @@ def main() -> None:
     vintage = select_vintage(candidates, criteria, selected_at=args.selected_at)
     print(f"  selected before verification: {len(vintage.members)}", file=sys.stderr)
 
-    # Drop members whose ingredient string does not resolve in Drugs@FDA. An
+    # Resolve every ingredient string to something Drugs@FDA answers for. An
     # unverified name captures nothing and would sit in the registry as a
     # permanently failing endpoint.
     with ThreadPoolExecutor(max_workers=4) as ex:
-        ok = list(ex.map(lambda m: resolves(m.entity_id), vintage.members))
-    dropped = [m.entity_id for m, good in zip(vintage.members, ok) if not good]
-    vintage.members = [m for m, good in zip(vintage.members, ok) if good]
-    print(f"  verified in Drugs@FDA      : {len(vintage.members)} "
-          f"({len(dropped)} dropped)", file=sys.stderr)
+        resolved = list(ex.map(lambda m: resolve_ingredient(m.entity_id),
+                               vintage.members))
+    dropped, proxied, kept = [], [], []
+    for member, result in zip(vintage.members, resolved):
+        if result is None:
+            dropped.append(member.entity_id)
+            continue
+        ingredient, _ = result
+        if ingredient != member.entity_id:
+            proxied.append((member.entity_id, ingredient))
+            member.entity_id = ingredient
+        kept.append(member)
+    # A proxy can collide with a molecule already selected on its own name.
+    seen: dict[str, object] = {}
+    for member in kept:
+        if member.entity_id in seen:
+            for path in member.paths:
+                if path not in seen[member.entity_id].paths:
+                    seen[member.entity_id].paths.append(path)
+            continue
+        seen[member.entity_id] = member
+    vintage.members = sorted(seen.values(), key=lambda m: m.entity_id)
+    print(f"  resolved in Drugs@FDA      : {len(vintage.members)} "
+          f"({len(proxied)} via a combination proxy, {len(dropped)} dropped)",
+          file=sys.stderr)
 
     path = write_vintage(REPO / "cohorts" / "injectable-generics", vintage)
     print(f"wrote {path.relative_to(REPO)} — {len(vintage.members)} members")
+    if proxied:
+        print(f"\ncombinations represented by their most specific ingredient "
+              f"({len(proxied)}) — a proxy, see the module docstring:")
+        for original, ingredient in proxied[:20]:
+            print(f"  {original[:56]:<58} -> {ingredient}")
     if dropped:
-        print(f"unresolved ingredient names ({len(dropped)}), not captured:")
+        print(f"\nstill unresolved ({len(dropped)}), not captured:")
         for name in dropped[:20]:
             print(f"  {name}")
 

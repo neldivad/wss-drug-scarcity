@@ -82,6 +82,8 @@ def main() -> None:
     body = HEADER.format(members=len(names), kb=kb, mb=kb * 12 / 1024)
     lines = [body]
     for name in names:
+        # Loose, not .exact: entity ids are validated at selection time, and
+        # a validated name like CEFOTAXIME is not itself an exact ingredient.
         search = quote(f'products.active_ingredients.name:"{name}"', safe="")
         lines.append(
             f'  - url: "https://api.fda.gov/drug/drugsfda.json'

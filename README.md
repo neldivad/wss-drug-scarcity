@@ -40,7 +40,7 @@ the next thing to build. Append freely.
 | Q11 | Is scarcity a US artefact or a global one? | blocked — EMA shortage page 404s, needs casing |
 | Q12 | What share of a country's registered sites are banned? | blocked — DECRS is JavaScript-gated, no public denominator |
 | Q13 | **Why doesn't someone else just make it?** | **answered: 51% of every product ever approved for these drugs is discontinued** |
-| Q14 | Do suppliers leave *before* a shortage or after it? | **source built, cohort frozen, paused pending first activation** — 275 molecules, ~1.3 MB/yr |
+| Q14 | Do suppliers leave *before* a shortage or after it? | **source built, cohort frozen, paused pending first activation** — 304 molecules, ~1.4 MB/yr |
 | Q15 | How big is the gap, in units? | **not observable — nobody publishes demand.** Delivered volume against its own trend is the closest proxy |
 | Q16 | Which shortages mean-revert, and which stop reverting? | forward: our own capture builds it. backward: **blocked, tested and failed** |
 
@@ -173,7 +173,7 @@ every drug old enough to have a price history has been in shortage for the
 | `fda.importalert.66-40` | GMP-failure DWPE list, 1.9 MB HTML, 448 firms | weekly | **yes** — delistings vanish |
 | `fda.importalert.66-41` | unapproved-drugs DWPE list, 6.5 MB HTML, 1,793 firms | monthly | **yes** — delistings vanish |
 | `fda.nsde.marketing` | 666,787 products, marketing start/end | — | no — **paused on purpose** |
-| `fda.drugsfda.cohort-status` | marketing-status counts for 275 cohort molecules | monthly | yes — **generated from the cohort, paused** |
+| `fda.drugsfda.cohort-status` | marketing-status counts for 304 cohort molecules | monthly | yes — **generated from the cohort, paused** |
 
 [`cohorts/`](cohorts/) holds the frozen sample Q14 is measured over — chosen
 once by hand, followed forever, dead members kept. The registry entry for it is

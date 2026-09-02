@@ -9,7 +9,7 @@
 #
 # One `count=products.marketing_status` query per molecule returns exactly the
 # numbers the question needs — {"Discontinued": 33, "Prescription": 4} — in
-# about 400 bytes. 275 molecules is ~110 KB per capture, ~1.3 MB/yr
+# about 400 bytes. 304 molecules is ~122 KB per capture, ~1.4 MB/yr
 # monthly. Capturing all 29,298 applications instead would cost ~114 MB/yr for
 # strictly less signal per byte.
 #
@@ -18,7 +18,7 @@
 # actually be observed, and once in never out so the dead stay visible.
 # See cohorts/select.py.
 source_id: fda.drugsfda.cohort-status
-status: paused
+status: paused  # flip to active when you want Q14 running
 cadence: monthly
 schema_id: fda-drugsfda-count.v1
 
@@ -64,6 +64,8 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AMINOCAPROIC%20ACID%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AMPHETAMINE%20ASPARTATE%20MONOHYDRATE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AMPICILLIN%20SODIUM%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ANAGRELIDE%20HYDROCHLORIDE%22&count=products.marketing_status"
@@ -72,9 +74,13 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ARSENIC%20TRIOXIDE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ASPIRIN%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ATROPINE%20SULFATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AZACITIDINE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AZELASTINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22AZITHROMYCIN%22&count=products.marketing_status"
     delay_seconds: 3
@@ -83,6 +89,8 @@ endpoints:
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22BENDAMUSTINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22BENZTROPINE%20MESYLATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22BETAMETHASONE%20ACETATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22BIVALIRUDIN%22&count=products.marketing_status"
     delay_seconds: 3
@@ -132,6 +140,10 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22CHLOROTHIAZIDE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22CHLORPROMAZINE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22CILASTATIN%20SODIUM%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22CIPROFLOXACIN%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22CISATRACURIUM%20BESYLATE%22&count=products.marketing_status"
@@ -170,6 +182,8 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DEHYDRATED%20ALCOHOL%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DESFLURANE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DESMOPRESSIN%20ACETATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DESONIDE%22&count=products.marketing_status"
@@ -179,6 +193,8 @@ endpoints:
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DEXMEDETOMIDINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DEXRAZOXANE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DEXTROSE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DIAZEPAM%22&count=products.marketing_status"
     delay_seconds: 3
@@ -202,13 +218,19 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DOXYCYCLINE%20HYCLATE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22DOXYLAMINE%20SUCCINATE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ECHOTHIOPHATE%20IODIDE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ELBASVIR%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22EMTRICITABINE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ENOXAPARIN%20SODIUM%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22EPINEPHRINE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22EPINEPHRINE%20BITARTRATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22EPTIFIBATIDE%22&count=products.marketing_status"
     delay_seconds: 3
@@ -278,7 +300,11 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22HEPARIN%20SODIUM%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22HOMATROPINE%20METHYLBROMIDE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22HYDROCHLOROTHIAZIDE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22HYDROCORTISONE%20ACETATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22HYDROCORTISONE%20SODIUM%20SUCCINATE%22&count=products.marketing_status"
     delay_seconds: 3
@@ -297,6 +323,8 @@ endpoints:
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22IDELALISIB%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22IFOSFAMIDE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22IMIPENEM%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22INSULIN%20GLARGINE%22&count=products.marketing_status"
     delay_seconds: 3
@@ -338,6 +366,10 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LEVOLEUCOVORIN%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LEVOTHYROXINE%20SODIUM%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LIDOCAINE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LIDOCAINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LINCOMYCIN%20HYDROCHLORIDE%22&count=products.marketing_status"
@@ -346,11 +378,15 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LISDEXAMFETAMINE%20DIMESYLATE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LOPINAVIR%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LORAZEPAM%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22LORLATINIB%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MARAVIROC%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MEMANTINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MEPERIDINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
@@ -395,6 +431,8 @@ endpoints:
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MIRIKIZUMAB%20MRKZ%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MITOMYCIN%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MONTELUKAST%20SODIUM%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22MORPHINE%20SULFATE%22&count=products.marketing_status"
     delay_seconds: 3
@@ -488,6 +526,8 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22PROCAINAMIDE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22PROGESTERONE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22PROMETHAZINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22PROPOFOL%22&count=products.marketing_status"
@@ -518,15 +558,29 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22ROPIVACAINE%20HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SALMETEROL%20XINAFOATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SCOPOLAMINE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SEMAGLUTIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20ACETATE%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20ASCORBATE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20BICARBONATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20CHLORIDE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20FLUORIDE%20F-18%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20LACTATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20NITROPRUSSIDE%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20OXYBATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SODIUM%20PHOSPHATE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SOMATROPIN%22&count=products.marketing_status"
     delay_seconds: 3
@@ -542,7 +596,11 @@ endpoints:
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SUGAMMADEX%22&count=products.marketing_status"
     delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SULBACTAM%20SODIUM%22&count=products.marketing_status"
+    delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SULCONAZOLE%20NITRATE%22&count=products.marketing_status"
+    delay_seconds: 3
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SULFAMETHOXAZOLE%22&count=products.marketing_status"
     delay_seconds: 3
   - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name%3A%22SUMATRIPTAN%22&count=products.marketing_status"
     delay_seconds: 3

@@ -15,20 +15,50 @@ are currently short**. A panel of only-short drugs can never answer "did
 suppliers leave before the shortage" — by the time a molecule would qualify,
 the exits already happened. The control group is the point.
 
-| path | rule | members |
-| --- | --- | --- |
-| `established` | top 300 injectable ANDA generics by marketed product count, floor 3 | 84 |
-| `new_entrant` | any molecule FDA has listed as short since 2010-01-01, **any size** | 153 |
-| both | | 38 |
-
-275 members at the 2026-09-03 vintage. The `new_entrant` path is what keeps
-tomorrow's shortage in the sample while it is still small.
+**304 members** at the 2026-09-03 vintage, on two paths — top injectable ANDA
+generics by marketed product count (the control group, mostly not short) and
+any molecule FDA has listed as short since 2010 at any size (which keeps
+tomorrow's shortage in the sample while it is still small).
 
 `entity_id` is the UPPERCASE active-ingredient string used to query
-Drugs@FDA, **verified to resolve before it is written** — 64 candidates were
-dropped at selection, almost all multi-ingredient combinations that have no
-single `active_ingredients.name`. An unverified name would sit in the registry
-as a permanently failing endpoint.
+Drugs@FDA, **verified to resolve before it is written**. An unverified name
+would sit in the registry as a permanently failing endpoint that captures
+nothing and never errors.
+
+### Resolving the messy names
+
+FDA names a combination shortage by concatenating its ingredients
+(`AMPICILLIN SODIUM SULBACTAM SODIUM`), which matches no single
+`active_ingredients.name`. 52 of 304 members are therefore represented by a
+**proxy**: the most specific ingredient in the combination.
+
+Getting this right took three passes, and the count alone never showed which
+pass was correct — only reading the matched names did:
+
+| rule | result | what was wrong |
+| --- | --- | --- |
+| substring only | 275 kept, 64 dropped | combinations silently lost, including one in the repo's own headline chart |
+| substring + fewest products | 312 kept, 5 dropped | rewarded rare *fragments* — `AMINO ACID` → `AMINO`, `DEXTROSE MONOHYDRATE` → `MONOHYDRATE` |
+| `.exact` only | 282 kept, 33 dropped | over-rejected: `CEFOTAXIME` is not an exact ingredient name (it is cefotaxime sodium), losing the one drug at 100% attrition |
+| **`.exact` as gate, substring as query** | **304 kept, 12 dropped** | ✓ |
+
+So: a full name is matched loosely, because a full name cannot be a fragment.
+A *sub-phrase* is only accepted if `.exact` confirms it is genuinely an
+ingredient name. On real ingredient names the two agree exactly
+(`ATROPINE SULFATE`: 71 products either way).
+
+**A proxy over-counts.** `SULBACTAM SODIUM` counts every product whose
+ingredient is sulbactam sodium, which is nearly but not exactly the ampicillin
+combination. Read those members as a supplier-base trend for a closely related
+product set, not an exact count for the combination.
+
+### The 12 still dropped
+
+Mostly not drugs (`PERITONEAL DIALYSIS`, `AMINO ACID`), radiopharmaceuticals
+(`NH3N13`, `FLUDEOXYGLUCOSE F18`) — and three misspellings in FDA's own
+shortage feed: `IRINOTECAN HYDROCHLOIDE`, `METOROPROLOL TARTRATE`,
+`NALXONE HYDROCHLORIDE`. They are left dropped rather than hand-corrected;
+a typo that FDA fixes will resolve on its own at the next selection.
 
 ## Running a selection
 
