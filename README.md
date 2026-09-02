@@ -39,6 +39,8 @@ the next thing to build. Append freely.
 | Q10 | Do recalls precede shortages? | needs ~12 months — same design as Q5, source not yet added |
 | Q11 | Is scarcity a US artefact or a global one? | blocked — EMA shortage page 404s, needs casing |
 | Q12 | What share of a country's registered sites are banned? | blocked — DECRS is JavaScript-gated, no public denominator |
+| Q13 | **Why doesn't someone else just make it?** | **answered: 51% of every product ever approved for these drugs is discontinued** |
+| Q14 | Do suppliers leave *before* a shortage or after it? | needs a new source — Drugs@FDA keeps the count, not the date (entry written, paused on cost) |
 
 ## What the first capture already shows
 
@@ -72,6 +74,25 @@ limitation, reported rather than hidden.
 Additions carry a publish date. **Removals carry nothing** — a firm that gets
 off the list disappears, and no record that it was ever there survives. That
 asymmetry is the whole case for capturing it.
+
+**Q13 — nobody fills the gap because they already left.** Matching the 70
+drugs in shortage to Drugs@FDA, 57 resolve to approved applications:
+
+```
+  products ever approved, still marketed   1,874
+  products ever approved, discontinued     1,946     51% attrition
+
+  cefotaxime sodium              40 approved,  0 still marketed   short since 2015
+  fentanyl citrate injection     71 gone,      6 left   (92%)     short since 2012
+  dopamine hydrochloride inj     39 gone,     13 left   (75%)     short since 2017
+  heparin sodium injection      167 gone,     77 left   (68%)     short since 2017
+```
+
+These are not drugs nobody knows how to make. Dozens of firms were approved to
+make each one and exited — and for cefotaxime, every single one did. A shortage
+of a 40-year-old sterile generic is an exit event, not a technical failure.
+
+What Drugs@FDA cannot say is *when* they left, which is Q14.
 
 **Q5 — the cross-sectional join does not work, and that is the finding.** Of
 448 GMP-banned firms, exactly three are current shortage suppliers (Baxter
@@ -112,6 +133,7 @@ every drug old enough to have a price history has been in shortage for the
 | `fda.importalert.66-40` | GMP-failure DWPE list, 1.9 MB HTML, 448 firms | weekly | **yes** — delistings vanish |
 | `fda.importalert.66-41` | unapproved-drugs DWPE list, 6.5 MB HTML, 1,793 firms | monthly | **yes** — delistings vanish |
 | `fda.nsde.marketing` | 666,787 products, marketing start/end | — | no — **paused on purpose** |
+| `fda.drugsfda.applications` | 29,298 applications, current marketing_status | — | yes — **paused pending a cost decision (Q14)** |
 
 `fda.nsde.marketing` is committed as `paused` because FDA retains products
 after they stop being marketed, so capture would add nothing. The entry exists

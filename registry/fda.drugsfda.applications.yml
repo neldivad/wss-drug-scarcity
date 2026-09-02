@@ -1,0 +1,52 @@
+# PAUSED PENDING A COST DECISION — see Q14 in the README.
+#
+# Drugs@FDA holds every approved application and each product's CURRENT
+# marketing_status: Prescription, Over-the-counter, or Discontinued. It
+# retains discontinued applications (14,801 discontinued products across the
+# database), so the LEVEL of supplier attrition is answerable today without
+# capture — 51% of products ever approved for the drugs now in shortage are
+# discontinued, and cefotaxime has 40 approvals with none still marketed.
+#
+# What it does NOT keep is WHEN. marketing_status is a current-state field
+# with no discontinuation date and no history: the transition Prescription ->
+# Discontinued is overwritten in place. So "did suppliers leave before the
+# shortage or after it" is destroyed, and that is the question Q14 needs.
+#
+# The cost: 29,298 applications over 30 paged endpoints, ~117 MB raw and
+# ~9.5 MB compressed per capture. Monthly that is ~114 MB/yr of git growth
+# against the repo's current ~31 MB/yr — a 4x increase, 1 GB in roughly seven
+# years instead of thirty. Real, affordable, and not mine to spend unasked.
+#
+# The cheaper alternative if that is too much: a frozen cohort of molecules
+# (wss.cohort) rather than the whole database. More design, far fewer bytes,
+# and it keeps the dead members that make attrition visible in the first place.
+source_id: fda.drugsfda.applications
+status: paused
+cadence: monthly
+schema_id: fda-drugsfda.v1
+
+publisher: US Food and Drug Administration
+publisher_tier: first_party
+destroys_own_history: true
+licence: "US federal work, no copyright in the US; https://open.fda.gov/terms/"
+personal_data: none
+storage: git
+
+notes: >-
+  Thirty endpoints of 1,000 applications. Paginate by skip; openFDA caps skip
+  at 25,000, so the tail needs a search filter rather than a deeper skip once
+  the database passes that. The parser emits meta.results.total so growth past
+  the configured pages shows up in the data instead of silently truncating.
+
+endpoints:
+  - url: "https://api.fda.gov/drug/drugsfda.json?limit=1000&skip=0"
+    delay_seconds: 5
+    timeout_seconds: 60
+
+gates:
+  expect_status: 200
+  min_bytes: 1000000
+  content_type_any: [json]
+  must_contain: ["application_number", "marketing_status"]
+  must_not_contain: ["NOT_FOUND"]
+  max_shrink_pct: 30
