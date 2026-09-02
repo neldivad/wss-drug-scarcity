@@ -162,6 +162,12 @@ is new. No workflow edits, ever.
 
 ## Manners
 
+Every request identifies who is making it. `WSS_CONTACT` is derived from
+GitHub's own `repository_owner` and `repository` in the capture workflows, so
+there is nothing to configure and a **fork automatically sends its own owner,
+never the original's**. Set a `WSS_CONTACT` repository secret only to override
+it — a role email, say.
+
 FDA endpoints are public and unauthenticated. The import alerts are single
 documents of 1.9 MB and 6.5 MB, fetched **once each, whole, never per-firm**.
 openFDA paginates at 1,000; the shortage feed is two requests. All of it runs
