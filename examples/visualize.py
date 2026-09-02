@@ -9,6 +9,7 @@ you a number and sends you back for the names. So each figure names the
 drugs, gives their therapeutic class, and puts the decision in the subtitle.
 
   whats-short.svg        Q1  which drugs, how long, what class — the stockpile list
+  shortage-age.svg       Q1  age structure of the list: churn against a permanent core
   supplier-attrition.svg Q13 how many approved makers each shorted drug has left
   single-supplier.svg    Q7  drugs down to one listed package — the watchlist
   enforcement-year.svg   Q6  GMP import bans by year and origin — is the base shrinking
@@ -398,6 +399,93 @@ def q6_enforcement(obs) -> str:
     return f"{out.relative_to(REPO)} — {len(years)} years, {total} firms"
 
 
+def q1_age_structure(obs) -> str:
+    """How old is the current shortage list — churn, or a permanent core?
+
+    This is the population view that the named top-18 cannot show, and it
+    carries the survivorship warning that applies to both: a shortage that
+    ENDED is not in the feed, so this is the age of what is still open, never
+    the age of all shortages.
+    """
+    src = "fda.shortages.current"
+    current = {e for e, v in state(obs, src, "status_code").items() if v == "1"}
+    year_now = int(last_seen(obs, src)[:4])
+    first: dict[str, int] = {}
+    for entity, value in state(obs, src, "first_listed").items():
+        if entity not in current:
+            continue
+        drug = entity.split("/", 1)[0]
+        y = int(value) // 10000
+        first[drug] = min(first.get(drug, y), y)
+
+    bands = [("under 1 year", 0, 1), ("1-2 years", 1, 2), ("2-5 years", 2, 5),
+             ("5-10 years", 5, 10), ("10 years or more", 10, 999)]
+    data = [(label, sum(1 for y in first.values() if lo <= year_now - y < hi))
+            for label, lo, hi in bands]
+    total = sum(n for _, n in data)
+    recent = data[0][1] + data[1][1]
+    chronic = total - recent
+    old = data[3][1] + data[4][1]
+
+    width, left, right = 980.0, 230.0, 150.0
+    row_h, gap = 26.0, 12.0
+    body = [txt(24, 32, "Q1 — is the shortage list churn, or a permanent core?",
+                size=17, fill=INK, weight="600")]
+    lead, dy = para(24, 54, f"The {total} drugs in shortage today, by how long "
+                    "each has been listed. Decision this supports: whether to "
+                    "treat a new shortage as a passing disruption or as the "
+                    "start of something permanent — the answer differs sharply "
+                    "by which band it lands in.", size=12, fill=INK2, chars=118)
+    body += lead
+    top_y = 54 + dy + 22
+    plot_bottom = top_y + len(data) * (row_h + gap)
+    height = plot_bottom + 88
+    vmax = max(n for _, n in data)
+    span = width - left - right
+
+    for i, (label, n) in enumerate(data):
+        y = top_y + i * (row_h + gap)
+        w = max(2.0, n / vmax * span)
+        # Emphasis, not a value ramp: the old tail is the story, the rest is
+        # context, and the categories are ordered so a ramp would double-encode.
+        # Emphasis on the chronic bands, which are the finding. Ordered
+        # categories, so a value ramp would double-encode bar length as hue.
+        colour = SLOTS[0] if i >= 2 else DEEMPH
+        body.append(bar(left, y, w, row_h, colour))
+        body.append(txt(left - 12, y + row_h - 8, label, size=12, fill=INK2,
+                        anchor="end"))
+        body.append(txt(left + w + 10, y + row_h - 8,
+                        f"{n} drugs   {n / total:.0%}", size=12, fill=INK,
+                        weight="600", tab=True))
+    body.append(f'<line x1="{left}" y1="{top_y - 8}" x2="{left}" '
+                f'y2="{plot_bottom - gap + 4}" stroke="{BASELINE}" '
+                f'stroke-width="1"/>')
+
+    note, ndy = para(24, plot_bottom + 14,
+                     f"This is not churn. {chronic} of the {total} drugs short "
+                     f"today have been short more than two years and "
+                     f"{old} more than five. Only {recent} arrived in the last "
+                     "two years. A US drug shortage is a chronic condition, "
+                     "not an incident.", size=12, fill=INK2, chars=118)
+    body += note
+    foot, _ = para(24, plot_bottom + 20 + ndy,
+                   "SURVIVORSHIP: a shortage that ENDED left the feed, so this "
+                   "is the age of what is still open and never the age of all "
+                   "shortages. The recent bands are therefore overstated "
+                   "relative to a true onset distribution. Fixing that is Q16, "
+                   "and only accumulated capture fixes it. Tested and rejected: "
+                   "month-of-year shows no seasonality once batch postings are "
+                   "collapsed to one date per drug.",
+                   size=10, fill=MUTED, chars=150, leading=14)
+    body += foot
+    out = OUT_DIR / "shortage-age.svg"
+    out.write_text(wrap(width, height, "Age structure of the shortage list",
+                        "Bar chart of how long each drug currently in shortage "
+                        "has been listed, in duration bands.",
+                        "\n".join(body)), encoding="utf-8")
+    return f"{out.relative_to(REPO)} — {total} drugs, {recent / total:.0%} under two years"
+
+
 def q13_attrition(obs) -> str:
     """How much of each shorted drug's approved supply base is left.
 
@@ -571,7 +659,8 @@ def main() -> None:
     obs = rows()
     if not obs:
         raise SystemExit("no observations — run `wss derive` first")
-    for line in (q1_whats_short(obs), q13_attrition(obs),
+    for line in (q1_whats_short(obs), q1_age_structure(obs),
+                 q13_attrition(obs),
                  q7_single_supplier(obs), q6_enforcement(obs),
                  q2_placeholder(obs), q14_placeholder(obs)):
         print(line)

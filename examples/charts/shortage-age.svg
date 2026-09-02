@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980.0" height="405.0" viewBox="0 0 980.0 405.0" role="img" aria-label="Age structure of the shortage list">
+<title>Age structure of the shortage list</title>
+<desc>Bar chart of how long each drug currently in shortage has been listed, in duration bands.</desc>
+<rect width="980.0" height="405.0" fill="#fcfcfb"/>
+<text x="24.0" y="32.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="17" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">Q1 — is the shortage list churn, or a permanent core?</text>
+<text x="24.0" y="54.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">The 70 drugs in shortage today, by how long each has been listed. Decision this supports: whether to treat a new</text>
+<text x="24.0" y="71.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">shortage as a passing disruption or as the start of something permanent — the answer differs sharply by which band it</text>
+<text x="24.0" y="88.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">lands in.</text>
+<path d="M230.0,127.0 h73.4 q4,0 4,4 v18.0 q0,4 -4,4 h-73.4 z" fill="#d5d4cc"/>
+<text x="218.0" y="145.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="end" font-weight="normal" style="">under 1 year</text>
+<text x="317.4" y="145.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">4 drugs   6%</text>
+<path d="M230.0,165.0 h54.1 q4,0 4,4 v18.0 q0,4 -4,4 h-54.1 z" fill="#d5d4cc"/>
+<text x="218.0" y="183.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="end" font-weight="normal" style="">1-2 years</text>
+<text x="298.1" y="183.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">3 drugs   4%</text>
+<path d="M230.0,203.0 h596.0 q4,0 4,4 v18.0 q0,4 -4,4 h-596.0 z" fill="#2a78d6"/>
+<text x="218.0" y="221.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="end" font-weight="normal" style="">2-5 years</text>
+<text x="840.0" y="221.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">31 drugs   44%</text>
+<path d="M230.0,241.0 h499.2 q4,0 4,4 v18.0 q0,4 -4,4 h-499.2 z" fill="#2a78d6"/>
+<text x="218.0" y="259.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="end" font-weight="normal" style="">5-10 years</text>
+<text x="743.2" y="259.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">26 drugs   37%</text>
+<path d="M230.0,279.0 h112.1 q4,0 4,4 v18.0 q0,4 -4,4 h-112.1 z" fill="#2a78d6"/>
+<text x="218.0" y="297.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="end" font-weight="normal" style="">10 years or more</text>
+<text x="356.1" y="297.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">6 drugs   9%</text>
+<line x1="230.0" y1="119.0" x2="230.0" y2="309.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="24.0" y="331.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">This is not churn. 63 of the 70 drugs short today have been short more than two years and 32 more than five. Only 7</text>
+<text x="24.0" y="348.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">arrived in the last two years. A US drug shortage is a chronic condition, not an incident.</text>
+<text x="24.0" y="371.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">SURVIVORSHIP: a shortage that ENDED left the feed, so this is the age of what is still open and never the age of all shortages. The recent bands are</text>
+<text x="24.0" y="385.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">therefore overstated relative to a true onset distribution. Fixing that is Q16, and only accumulated capture fixes it. Tested and rejected:</text>
+<text x="24.0" y="399.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">month-of-year shows no seasonality once batch postings are collapsed to one date per drug.</text>
+</svg>

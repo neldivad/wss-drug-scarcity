@@ -206,6 +206,21 @@ carries their therapeutic class, and states the decision it supports.
 and analgesia dominate the eight-year-plus tail, and every drug on it is an
 injectable. Supports: what to hold buffer stock of.
 
+![Age structure of the shortage list](examples/charts/shortage-age.svg)
+
+**Q1, the population view.** 63 of the 70 drugs short today have been short
+more than two years, 32 more than five. Only 7 arrived in the last two years.
+A US drug shortage is a chronic condition, not an incident — which is why the
+named list above is dominated by drugs nobody has resupplied in a decade.
+
+Two things were tested for this figure and rejected. **Month-of-year shows no
+seasonality**: the apparent February and October peaks are batch postings, 12
+individual dates accounting for 39% of package-level onsets, and they vanish
+once each drug is collapsed to one date. And the age bands are **not** an
+onset distribution — a shortage that ended left the feed, so the recent bands
+are understated relative to reality. Fixing that is Q16, and only accumulated
+capture fixes it.
+
 ![Approved makers left per shorted drug](examples/charts/supplier-attrition.svg)
 
 **Q13 — the answer to "why doesn't someone else just make it".** Every product
