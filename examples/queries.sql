@@ -120,3 +120,52 @@ ORDER BY 1;
 SELECT observed_at::DATE AS day, max(value) AS feed_records_total
 FROM obs WHERE metric = 'feed_records_total'
 GROUP BY 1 ORDER BY 1;
+
+-- Q14. THE SUPPLIER-EXIT DETECTOR — the reason the cohort exists.
+-- Molecules whose marketed-product count fell between two captures, with how
+-- far they fell. Empty until the cohort source is active and has two captures.
+WITH ranked AS (
+  SELECT entity_id, observed_at, value,
+         lag(value)       OVER w AS prev_value,
+         lag(observed_at) OVER w AS prev_at
+  FROM obs
+  WHERE metric = 'products_marketed'
+    AND source_id = 'fda.drugsfda.cohort-status'
+  WINDOW w AS (PARTITION BY entity_id ORDER BY observed_at)
+)
+SELECT entity_id                       AS molecule,
+       prev_at::DATE                   AS from_capture,
+       observed_at::DATE               AS to_capture,
+       prev_value                      AS suppliers_before,
+       value                           AS suppliers_after,
+       prev_value - value              AS lost
+FROM ranked
+WHERE prev_value IS NOT NULL AND value < prev_value
+ORDER BY lost DESC, molecule;
+
+-- Q14b. Did the exit come BEFORE the shortage? Joins each molecule's supplier
+-- losses to the date FDA first listed any of its packages. A negative gap
+-- means suppliers left before FDA ever called it short.
+WITH exits AS (
+  SELECT entity_id, min(observed_at) AS first_loss
+  FROM (
+    SELECT entity_id, observed_at, value,
+           lag(value) OVER (PARTITION BY entity_id ORDER BY observed_at) AS prev
+    FROM obs
+    WHERE metric = 'products_marketed'
+      AND source_id = 'fda.drugsfda.cohort-status'
+  )
+  WHERE prev IS NOT NULL AND value < prev
+  GROUP BY 1
+),
+listed AS (
+  SELECT replace(split_part(entity_id, '/', 1), 'drug:', '') AS drug,
+         min(value)                                          AS first_listed
+  FROM latest_state
+  WHERE metric = 'first_listed' AND source_id = 'fda.shortages.current'
+  GROUP BY 1
+)
+SELECT e.entity_id, e.first_loss::DATE, l.first_listed
+FROM exits e LEFT JOIN listed l
+  ON replace(e.entity_id, 'molecule:', '') = l.drug
+ORDER BY 1;
