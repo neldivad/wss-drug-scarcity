@@ -4,21 +4,17 @@
 because the FDA deletes the answer.
 
 FDA publishes the drugs in shortage *today*. When a shortage ends, the record
-leaves the feed. On 2026-08-31 the openFDA shortage endpoint held **1,173
-Current, 443 To Be Discontinued and 7 Resolved** — seven, across fourteen
-years of shortage management. "How long does a US drug shortage last?" is a
-question nobody can answer, including the FDA. This repo starts answering it.
+leaves the feed. On 2026-08-31 the openFDA endpoint held **1,173 Current, 443
+To Be Discontinued and 7 Resolved** — seven, across fourteen years of shortage
+management. "How long does a US drug shortage last?" is a question nobody can
+answer, including the FDA. This repo starts answering it.
 
-> **Before using any duration figure:** a shortage is recorded per *package
-> NDC*, not per drug, and `initial_posting_date` is when FDA first posted that
-> package — not when supply actually failed. A drug can be listed, quietly
-> reverified 40 times, and never resolve. Read every duration as **time on
-> FDA's list**, never as time unavailable to patients.
-
-> **And before comparing any two countries:** counts here have no denominator.
-> FDA does not publish a fetchable list of registered establishments per
-> country, so "China 156 firms banned" cannot be turned into a rate. Every
-> count in this repo is a share of a stated base or it is nothing (Q12).
+> **Two things to know before quoting any figure here.** A shortage is recorded
+> per *package NDC* and `initial_posting_date` is when FDA first posted that
+> package, not when supply failed — read every duration as **time on FDA's
+> list**. And counts of firms have **no denominator**: FDA publishes no
+> fetchable list of registered establishments per country, so "China 154" is a
+> count and never a rate (Q12).
 
 ## Questions this exists to answer
 
@@ -27,249 +23,104 @@ the next thing to build. Append freely.
 
 | # | Question | Status |
 | --- | --- | --- |
-| Q1 | Mean shortage duration — per substance, per drug, per category | needs ~12 months — **the founding question** |
+| Q1 | Mean shortage duration, per substance and per class | needs ~12 months — **the founding question** |
 | Q2 | Which shortages resolve, and which never do? | needs ~12 months |
-| Q3 | Does availability track price? | price side answerable for 48.5% of the list (see the ASP caveat); **severity side answered — 7 drugs have no available package at all** |
+| Q3 | How severe is each shortage right now? | **answered: 7 drugs have no available package at all** |
 | Q4 | Which suppliers are fragile? | reframed — count suppliers per substance, never track company identity |
-| Q5 | Does an import ban predict a shortage? (−12…+12 months) | needs ~12 months — both axes verified, only shortage state is missing |
+| Q5 | Does an import ban predict a shortage? | needs ~12 months — cross-section gives 3 matches of 448, no causation |
 | Q6 | How long do firms stay banned, and who gets off? | needs ~26 weeks — additions dated, **removals destroyed** |
-| Q7 | How concentrated is supply per drug? | answerable — join to the NDC/NSDE reference tables |
-| Q8 | Which dosage forms are fragile, against a benchmark? | **answered: injectables are 7.6% of marketed products but 71% of shortages — 9.3× enrichment** |
+| Q7 | How concentrated is supply per drug? | answerable — 6 drugs are down to one listed package |
+| Q8 | Which dosage forms are fragile, against a benchmark? | **answered: injectables are 7.6% of products, 71% of shortages** |
 | Q9 | Is the shortage list maintained, or stale? | **answered: 1,010 of 1,623 records touched within 8–30 days** |
-| Q10 | Do recalls precede shortages? | needs ~12 months — same design as Q5, source not yet added |
-| Q11 | Is scarcity a US artefact or a global one? | blocked — EMA shortage page 404s, needs casing |
+| Q10 | Do recalls precede shortages? | needs ~12 months — source not yet added |
+| Q11 | Is scarcity a US artefact or global? | blocked — EMA shortage page 404s, needs casing |
 | Q12 | What share of a country's registered sites are banned? | blocked — DECRS is JavaScript-gated, no public denominator |
 | Q13 | **Why doesn't someone else just make it?** | **answered: 51% of every product ever approved for these drugs is discontinued** |
-| Q14 | Do suppliers leave *before* a shortage or after it? | **source built, cohort frozen, paused pending first activation** — 304 molecules, ~1.4 MB/yr |
-| Q15 | How big is the gap, in units? | **not observable — nobody publishes demand.** Delivered volume against its own trend is the closest proxy |
-| Q16 | Which shortages mean-revert, and which stop reverting? | forward: our own capture builds it. backward: **blocked, tested and failed** |
+| Q14 | Do suppliers leave *before* a shortage or after? | source built, cohort frozen, **paused pending activation** |
+| Q15 | How big is the gap, in units? | **not observable — nobody publishes demand** |
+| Q16 | Which shortages mean-revert, and which stop? | forward: capture builds it. backward: **tested and failed** |
 
-## What the first capture already shows
+Q15 and Q16 look answerable and are not. Nobody publishes demand, so there is
+no gap to compute; and reconstructing ended episodes from Medicaid volume was
+tried and fails — dopamine's volume *rose* through two years of its shortage,
+because Medicaid is outpatient data and this list is 71% hospital injectables.
 
-**Q8 — 70 distinct generics are in shortage; 61 have been for over two
-years.** Fentanyl citrate and atropine sulfate injection have been listed
-continuously since 2012-01-01.
+## What you can build
 
-```
-  10+ yr   ######                             6
-  5-10 yr  #######################           23
-  2-5 yr   ################################  32
-  1-2 yr   #####                              5
-  <1 yr    ####                               4
-```
+All figures come from [examples/visualize.py](examples/visualize.py) — stdlib
+only, deterministic, regenerated from the derived table. Each one names the
+drugs and states the decision it supports, because a count of drugs answers a
+surface question and sends the reader back for the names.
 
-**Q6 — two import-alert lists, two different populations.** 66-40 is the one
-that touches supply.
+![What is short, for how long, and in what class](examples/charts/whats-short.svg)
 
-| alert | what | blocks on the page | distinct firms |
-| --- | --- | --- | --- |
-| **66-40** | manufacturing sites that failed GMP inspection | 466 | **448** |
-| 66-41 | firms shipping unapproved / adulterated drugs | 1,921 | 1,793 |
+**Q1.** The 18 longest-running shortages, named, coloured by class. Every one
+is an injectable, and anaesthesia and analgesia dominate the eight-year tail.
 
-A firm can occupy several blocks (multiple addresses, or product groups split
-across the page), so the derived count is lower than the raw block count. For
-66-40 the membership breaks down China 154, India 99, Canada 23, Mexico 17 —
-and **33 firms whose country the parser cannot read**, 7.4% of the list. The
-address line is free text with no country field, so that residual is a known
-limitation, reported rather than hidden.
+![Age structure of the shortage list](examples/charts/shortage-age.svg)
 
-Additions carry a publish date. **Removals carry nothing** — a firm that gets
-off the list disappears, and no record that it was ever there survives. That
-asymmetry is the whole case for capturing it.
+**Q1, the population view.** 63 of 70 drugs short today have been short over
+two years — a chronic condition, not an incident. *Seasonality was tested and
+rejected: the apparent peaks are batch postings.*
 
-**Q13 — nobody fills the gap because they already left.** Matching the 70
-drugs in shortage to Drugs@FDA, 57 resolve to approved applications:
+![Availability of drugs in shortage](examples/charts/availability.svg)
 
-```
-  products ever approved, still marketed   1,874
-  products ever approved, discontinued     1,946     51% attrition
+**Q3, severity.** Every other figure measures how *long*; this measures how
+*bad*. Ifosfamide, desmopressin and sufentanil are at zero. Oncology is the
+worst class by rate (42%) while anaesthesia has the most packages.
 
-  cefotaxime sodium              40 approved,  0 still marketed   short since 2015
-  fentanyl citrate injection     71 gone,      6 left   (92%)     short since 2012
-  dopamine hydrochloride inj     39 gone,     13 left   (75%)     short since 2017
-  heparin sodium injection      167 gone,     77 left   (68%)     short since 2017
-```
+![Approved makers left per shorted drug](examples/charts/supplier-attrition.svg)
 
-These are not drugs nobody knows how to make. Dozens of firms were approved to
-make each one and exited — and for cefotaxime, every single one did. A shortage
-of a 40-year-old sterile generic is an exit event, not a technical failure.
+**Q13 — why nobody else just makes it.** Products ever approved against those
+still marketed. Cefotaxime is at **zero of 17**, short since 2015. A drug whose
+makers all left is an exit problem, not a manufacturing one.
 
-What Drugs@FDA cannot say is *when* they left, which is Q14.
+![Drugs down to one listed package](examples/charts/single-supplier.svg)
 
-**Q5 — the cross-sectional join does not work, and that is the finding.** Of
-448 GMP-banned firms, exactly three are current shortage suppliers (Baxter
-Healthcare, Sun Pharmaceutical, Huons). Three of 466 says nothing about
-causation. Whether a ban is *followed* by a shortage is only visible if both
-lists are sampled over time.
+**Q7.** Six named drugs are one delisting from none. A shortlist to check, not
+a verdict — packages not on the shortage list are invisible here.
 
-## Two things this repo cannot do, tested rather than assumed
+![GMP import bans by year and origin](examples/charts/enforcement-year.svg)
 
-**Q15 — there is no quantitative gap.** `availability` is a three-level
-ordinal (Unavailable / Limited / Available), and that is genuinely all FDA
-publishes. A gap is demand minus supply, and **nobody publishes demand** — not
-FDA, not CMS, not the manufacturers. What is observable is delivered volume,
-so the closest defensible measure is supply against its own prior trend, never
-a shortfall figure.
+**Q6.** Additions to Import Alert 66-40 run 30–49 a year since 2023 against
+7–24 before 2016, mostly China and India. Raw counts — read Q12 first.
 
-**Q16 — the backward episode series does not exist, and the obvious proxy
-fails.** Every figure in this repo shows shortages that are *still* open,
-which is the tail that never mean-reverted. The episodes that started and
-ended — and the moment a drug stopped recovering — are the more interesting
-population, and FDA deleted them.
+![Shortage duration, deliberately empty](examples/charts/shortage-duration.svg)
 
-The obvious workaround is to reconstruct episodes from volume. It was tried
-and it does not work. Medicaid State Drug Utilization has units reimbursed per
-NDC per quarter back to 1991, but for dopamine — continuously short since
-November 2017 — reported volume *rose* through 2019 and the series is
-dominated by reporting noise:
+![Supplier exit timing, deliberately empty](examples/charts/supplier-exits.svg)
 
-```
-2016Q3  100,500  ##################
-2017Q4  116,798  #####################     <- shortage begins here
-2018Q1  268,041  ##################################################
-2019Q3  288,921  ######################################################
-2021Q2   33,789  ######
-```
+**Q2 and Q14, deliberately empty.** Nothing published can backfill either.
+They fill themselves in as captures accrue, which is the entire proposition —
+so they ship visible rather than omitted.
 
-Same root cause as the NADAC result below: Medicaid is outpatient pharmacy
-data, and 71% of this list is hospital injectables. CMS Part B claims per
-HCPCS is the structurally correct series for that population and joins through
-the same NDC-HCPCS crosswalk — untested here, and the honest next thing to try.
-
-Going *forward* Q16 needs no proxy at all: an NDC leaving the list is an
-episode ending, and `examples/queries.sql` already detects it. That is what
-twelve months of capture buys.
-
-## The price and volume axes already exist
-
-Neither is captured here. Both are CMS-archived, and both join on NDC.
-
-| axis | source | back to | coverage of the shortage list |
-| --- | --- | --- | --- |
-| price, retail | NADAC, weekly per NDC | 2014 | 38.4% of non-injectables |
-| price, hospital | CMS ASP quarterly + NDC-HCPCS crosswalk | 2020 | **53.6% of injectables** |
-| volume | Medicaid SDUD, per NDC per state per quarter | 1991 | joins on NDC |
-
-Together they price **48.5%** of shortage NDCs. The two are near-disjoint by
-design — ASP reaches 0.6% of non-injectables, NADAC 4.7% of injectables — so
-both are needed.
-
-> **The ASP caveat, which changes the study design.** ASP is a formula, not a
-> market price: it is derived from manufacturer-reported sales two quarters
-> back. Across 2021–2025 drugs in continuous shortage barely move — dopamine
-> −1%, dobutamine +11% over four and a half years, below inflation. Scarcity
-> does not reach ASP the way it would a spot price. **Volume is the better
-> dependent variable than price, and supplier count better still.**
-
-And the reason the event study cannot be run today is worth stating plainly:
-every drug old enough to have a price history has been in shortage for the
-*entire* window. There is no "before". Manufacturing that "before" is the job.
+Palette is the [dataviz](https://github.com/anthropics/skills) reference
+instance, validated rather than eyeballed.
 
 ## Sources
 
 | source_id | what | cadence | destroys own history? |
 | --- | --- | --- | --- |
 | `fda.shortages.current` | openFDA shortage feed, 1,623 records over 2 pages | weekly | **yes** — resolved records leave the feed |
-| `fda.importalert.66-40` | GMP-failure DWPE list, 1.9 MB HTML, 448 firms | weekly | **yes** — delistings vanish |
-| `fda.importalert.66-41` | unapproved-drugs DWPE list, 6.5 MB HTML, 1,793 firms | monthly | **yes** — delistings vanish |
-| `fda.nsde.marketing` | 666,787 products, marketing start/end | — | no — **paused on purpose** |
+| `fda.importalert.66-40` | GMP-failure DWPE list, 448 firms | weekly | **yes** — delistings vanish |
+| `fda.importalert.66-41` | unapproved-drugs DWPE list, 1,793 firms | monthly | **yes** — delistings vanish |
 | `fda.drugsfda.cohort-status` | marketing-status counts for 304 cohort molecules | monthly | yes — **generated from the cohort, paused** |
+| `fda.nsde.marketing` | 666,787 products, marketing start/end | — | no — **paused on purpose** |
+
+Both `paused` entries document a decision. NSDE retains products after they
+stop being marketed, so capture adds nothing — the verdict that also kept
+**DailyMed labels out entirely**, since they serve full version history.
+`fda.drugsfda.cohort-status` is built and waiting on one `status:` flip.
 
 [`cohorts/`](cohorts/) holds the frozen sample Q14 is measured over — chosen
-once by hand, followed forever, dead members kept. The registry entry for it is
-generated from the vintages, never hand-edited.
+once by hand, dead members kept. [`reference/`](reference/) holds one-time
+lookups from sources that keep their own history.
 
-[`reference/`](reference/) holds frozen lookups — one-time extracts from
-sources that keep their own history, committed so a question stays answerable
-without a capture budget. `drugsfda-attrition-2026-09-03.csv` is 4 KB and
-answers Q13 permanently.
-
-`fda.nsde.marketing` is committed as `paused` because FDA retains products
-after they stop being marketed, so capture would add nothing. The entry exists
-so the decision is not re-litigated, and because it is the reference table Q7
-joins against. **DailyMed labels were rejected outright** for the same reason:
-they serve full per-label version history (metformin v1 2013 → v10 2026).
-
-## What you can build
-
-All figures come from [examples/visualize.py](examples/visualize.py) — stdlib
-only, deterministic, regenerated from the derived table.
-
-**The test each one has to pass: after reading it, can someone act without
-running another query?** A count of drugs fails that test — it gives a number
-and sends the reader back for the names. So every figure names the drugs,
-carries their therapeutic class, and states the decision it supports.
-
-![What is short, for how long, and in what class](examples/charts/whats-short.svg)
-
-**Q1.** The 18 longest-running shortages, named, coloured by class. Anaesthesia
-and analgesia dominate the eight-year-plus tail, and every drug on it is an
-injectable. Supports: what to hold buffer stock of.
-
-![Age structure of the shortage list](examples/charts/shortage-age.svg)
-
-**Q1, the population view.** 63 of the 70 drugs short today have been short
-more than two years, 32 more than five. Only 7 arrived in the last two years.
-A US drug shortage is a chronic condition, not an incident — which is why the
-named list above is dominated by drugs nobody has resupplied in a decade.
-
-Two things were tested for this figure and rejected. **Month-of-year shows no
-seasonality**: the apparent February and October peaks are batch postings, 12
-individual dates accounting for 39% of package-level onsets, and they vanish
-once each drug is collapsed to one date. And the age bands are **not** an
-onset distribution — a shortage that ended left the feed, so the recent bands
-are understated relative to reality. Fixing that is Q16, and only accumulated
-capture fixes it.
-
-![Availability of drugs in shortage](examples/charts/availability.svg)
-
-**Q3, the severity view.** Every other figure here measures how *long*; this
-one measures how *bad*. Seven drugs in shortage have no available package at
-all — ifosfamide, desmopressin and sufentanil are at zero. Supports: triage,
-because a rationed drug needs conservation and an absent one needs a
-substitute today.
-
-Two findings fall out of it. Injectables are **28%** unavailable against 19%
-for other forms, so they are not merely over-represented in shortage but worse
-affected once short. And **oncology is the worst class by rate** (42% of its
-packages unavailable) while anaesthesia has the most packages — severity and
-volume rank differently, which is the denominator trap this repo keeps warning
-about, showing up in its own data.
-
-![Approved makers left per shorted drug](examples/charts/supplier-attrition.svg)
-
-**Q13 — the answer to "why doesn't someone else just make it".** Every product
-ever approved against those still marketed. Cefotaxime is at **zero of 17** and
-has been short since 2015; dopamine has 4 of 37 left. Supports: telling a
-manufacturing problem from an exit problem, because a drug whose makers all
-left will not be fixed by asking the survivors to try harder.
-
-![Drugs down to one listed package](examples/charts/single-supplier.svg)
-
-**Q7.** Six named drugs are down to a single listed package. Supports: which
-substitution plans to write before they are needed. A shortlist to check, not
-a verdict — packages not on the shortage list are invisible here.
-
-![GMP import bans by year and origin](examples/charts/enforcement-year.svg)
-
-**Q6.** Bans by year of first listing, split China / India / rest of world.
-Additions have run at 30-49 a year since 2023 against 7-24 before 2016, and
-China plus India are now most of each year's additions. Supports: whether the
-qualified-supplier base is narrowing, and where. Raw counts, no denominator —
-read Q12 first.
-
-![Shortage duration, deliberately empty](examples/charts/shortage-duration.svg)
-
-![Supplier exit timing, deliberately empty](examples/charts/supplier-exits.svg)
-
-**Q2 and Q14, deliberately empty.** No shortage has begun and ended inside this
-record yet, and no supplier exit has been dated. Neither can be backfilled from
-anything published. Both figures fill themselves in as captures accrue — which
-is the entire proposition, so they ship visible rather than omitted.
-
-Palette is the dataviz reference instance, categorical slots in fixed order,
-validated rather than eyeballed — all checks pass with a contrast warning on
-three slots, which is why every mark carries a visible text label.
+**Price and volume already exist and are not captured here.** NADAC covers 38%
+of non-injectable shortage NDCs, CMS ASP plus the NDC-HCPCS crosswalk covers
+54% of injectables, and Medicaid SDUD gives volume back to 1991 — together
+48.5% of the list. But ASP is a formula off sales two quarters back, so
+scarcity barely moves it (dopamine −1% across four and a half years short).
+**Volume is the better dependent variable than price.**
 
 ## Using it
 
@@ -287,62 +138,49 @@ every aggregate is a prefix GROUP BY and never a parse-time count:
 ```
 drug:atropine-sulfate-injection/ndc:00517100425
 country:china/firm:zhejiang-...
+molecule:dopamine-hydrochloride
 ```
 
-**Current state is per entity, not per timestamp.** The shortage feed is
-paged and each endpoint carries its own fetch time, so filtering on
-`observed_at = max(observed_at)` keeps only the last page — it drops a third
-of the drugs and nothing warns you. Take the newest row per entity;
-`examples/queries.sql` defines a `latest_state` view that does exactly that.
-
-Metrics: `listed` (1 = on the list this week), `status_code` (0 Resolved,
-1 Current, 2 To Be Discontinued), `availability` (0 Unavailable, 1 Limited,
-2 Available), `first_listed` / `last_update` (YYYYMMDD integers, never ages —
-so a re-derive years from now is byte-identical), `product_entries`,
-`firms_listed`, `feed_records_total`, `is_injectable`.
-
-Every query in [examples/queries.sql](examples/queries.sql) shows the pattern.
-
-## Storage
-
-Roughly **31 MB/year** in git, measured on real captures. The payloads are
-repetitive JSON and HTML that zlib to 4-14% of raw size, so the 12 MB `raw/`
-directory is under 1 MB of actual git objects. At that rate GitHub's 1 GB soft
-warning is three decades out, and object storage is not a decision this repo
-needs to make. If it ever is, `storage: object` on one registry entry moves
-that source to R2 and nothing else changes.
+**One gotcha, and it is silent.** Current state is per entity, not per
+timestamp: the shortage feed is paged, each endpoint carries its own fetch
+time, and `observed_at = max(observed_at)` therefore keeps only the last page.
+It drops a third of the drugs and nothing warns you. Take the newest row per
+entity — [examples/queries.sql](examples/queries.sql) opens with a
+`latest_state` view that does, documents every metric, and every query there
+builds on it.
 
 ## Contributing
 
 **The test for a new source: which open question does it close?** If none, it
-does not go in. That rule is why openFDA's enforcement (recall) endpoint is
-*not* here yet — it answers Q10, but at ~3.2 MB per capture of a payload where
-any single status change rewrites the whole blob, and Q10 needs twelve months
-of shortage history before the join is even meaningful. It goes in when the
-question is ready, not when the endpoint is convenient.
+does not go in — which is why openFDA's recall endpoint is not here yet. It
+answers Q10, but at ~3.2 MB per capture where one status change rewrites the
+whole blob, and Q10 needs a year of shortage history before the join means
+anything.
 
 Adding one is a single file in `registry/`, plus a parser if the payload shape
-is new. No workflow edits, ever — except one line in `derive.yml`'s `PARSERS`
-when a genuinely new *schema* appears.
+is new. No workflow edits, ever.
 
 ## Manners
 
 FDA endpoints are public and unauthenticated. The import alerts are single
-documents of 1.9 MB and 6.5 MB — fetched **once each, whole, never per-firm**,
-15 seconds apart. openFDA paginates at 1,000; the shortage feed is two
-requests. All of it runs in one shard, because sharding parallelises across
-sources and more shards would mean more runners hitting one host at once.
+documents of 1.9 MB and 6.5 MB, fetched **once each, whole, never per-firm**.
+openFDA paginates at 1,000; the shortage feed is two requests. All of it runs
+in one shard, because sharding parallelises across sources and more shards
+would mean more runners hitting one host at once.
 
-`personal_data: none` is load-bearing here. FAERS adverse-event reports and
-MAUDE narratives carry patient age, sex and free text. **Counts only, never
-case-level** — and the registry rejects anything else.
+Growth is ~31 MB/yr in git — these payloads zlib to 4–14% of raw size, so
+object storage is not a decision this repo needs to make.
+
+`personal_data: none` is load-bearing: FAERS and MAUDE carry patient age, sex
+and free text. **Counts only, never case-level** — the registry rejects
+anything else.
 
 ## Licences
 
 Code MIT; data CC-BY-4.0. Sources are US federal works
-([openFDA terms](https://open.fda.gov/terms/)), which carry no US copyright
-but do carry a no-endorsement condition: do not imply FDA review or
-endorsement of anything derived here.
+([openFDA terms](https://open.fda.gov/terms/)), which carry no US copyright but
+do carry a no-endorsement condition: do not imply FDA review of anything
+derived here.
 
 **This is not medical or procurement advice.** A drug's absence from this
 dataset is not evidence it is available, and its presence is not evidence a

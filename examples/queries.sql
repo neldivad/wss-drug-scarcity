@@ -3,8 +3,28 @@
 --   duckdb -c ".read examples/queries.sql"
 --
 -- Entity ids are composite, so every aggregate is a prefix GROUP BY:
---   drug:<generic>/ndc:<ndc11>
---   country:<country>/firm:<firm>
+--   drug:<generic>/ndc:<ndc11>       shortage feed, one row per package
+--   drug:<generic>/category:<class>  therapeutic class membership
+--   country:<country>/firm:<firm>    import alert membership
+--   molecule:<ingredient>            Drugs@FDA cohort counts
+--
+-- METRICS
+--   listed                 1 = on the list at this capture
+--   status_code            0 Resolved, 1 Current, 2 To Be Discontinued
+--   availability           0 Unavailable, 1 Limited, 2 Available
+--   is_injectable          1 if the dosage form is an injection
+--   in_category            1 = drug belongs to that therapeutic class
+--   first_listed           YYYYMMDD, when FDA first posted it
+--   last_update            YYYYMMDD, when FDA last touched it
+--   product_entries        products covered by one banned firm
+--   firms_listed           total firms on an import alert
+--   products_marketed      still Prescription or OTC in Drugs@FDA
+--   products_discontinued  marketing_status Discontinued
+--   products_ever          marketed + discontinued
+--   feed_records_total     size of the shortage feed, a growth alarm
+--
+-- Dates are absolute integers, never ages, so a re-derive years from now
+-- reproduces byte-identical output.
 --
 -- CURRENT STATE IS PER ENTITY, NOT PER TIMESTAMP. The shortage feed is paged,
 -- and each endpoint carries its own fetch time, so filtering on
