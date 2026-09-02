@@ -15,6 +15,11 @@ values, ambiguous between "sum" and "latest". Every aggregate is a downstream
 GROUP BY on the entity prefix instead.
 
 `status_code`: 0 = Resolved, 1 = Current, 2 = To Be Discontinued.
+`in_category`: a membership edge, `drug:<generic>/category:<therapeutic>` = 1.
+A drug carries several categories, so this is a separate entity namespace
+rather than a field — it is what lets a chart say *which* drugs and *what
+class*, instead of only how many.
+
 `is_injectable`: 1 if the dosage form is an injection. Categorical facts are
 encoded as 0/1 metrics rather than left in the raw archive, so the repo's
 headline finding (injectables are 7.6% of marketed products but 71% of
@@ -89,6 +94,7 @@ def parse(body: bytes, ctx: derive.ParseContext):
             value=int(total), unit="count")
 
     merged: dict[str, dict] = {}
+    categories: set[tuple[str, str]] = set()
 
     for record in payload.get("results") or []:
         ndc = _ndc11(record.get("package_ndc", ""))
@@ -122,6 +128,11 @@ def parse(body: bytes, ctx: derive.ParseContext):
             "inject" in (record.get("dosage_form") or "").lower())
         acc["is_injectable"] = max(injectable, acc.get("is_injectable", 0))
 
+        for category in record.get("therapeutic_category") or []:
+            slug = _slug(category)
+            if slug:
+                categories.add((generic, slug))
+
     _UNITS = {"status_code": "code", "availability": "ordinal",
               "first_listed": "yyyymmdd", "last_update": "yyyymmdd",
               "is_injectable": "bool"}
@@ -133,6 +144,11 @@ def parse(body: bytes, ctx: derive.ParseContext):
             yield derive.Observation(
                 entity_id=entity, metric=metric, value=value,
                 unit=_UNITS[metric])
+
+    for generic, category in categories:
+        yield derive.Observation(
+            entity_id=f"drug:{generic}/category:{category}",
+            metric="in_category", value=1, unit="bool")
 
 
 derive.register("fda-shortage.v1", parse, PARSER_VERSION)

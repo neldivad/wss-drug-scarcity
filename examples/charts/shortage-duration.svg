@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260" role="img" aria-label="Shortage duration — not yet answerable">
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="250" viewBox="0 0 980 250" role="img" aria-label="Shortage duration — not yet answerable">
 <title>Shortage duration — not yet answerable</title>
 <desc>Placeholder explaining that resolved-shortage durations require accumulated captures.</desc>
-<rect width="900" height="260" fill="#fcfcfb"/>
-<text x="24.0" y="30.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="16" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">Q2 — shortages that ended, and how long they took</text>
-<text x="24.0" y="50.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">deliberately empty</text>
-<rect x="24" y="74" width="852" height="128" rx="6" fill="none" stroke="#e1e0d9" stroke-width="1" stroke-dasharray="5 4"/>
-<text x="450.0" y="128.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="13" fill="#52514e" text-anchor="middle" font-weight="normal" style="">2 capture(s). No shortage has begun and ended inside this record yet.</text>
-<text x="450.0" y="152.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#898781" text-anchor="middle" font-weight="normal" style="">FDA retains 7 resolved records out of 1,623. Nothing can import this history — it was deleted.</text>
-<text x="450.0" y="176.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#898781" text-anchor="middle" font-weight="normal" style="">The series starts the week capture started, and this chart fills itself in.</text>
-<text x="24.0" y="248.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">A longitudinal repo should say so on day one rather than ship an empty axis.</text>
+<rect width="980" height="250" fill="#fcfcfb"/>
+<text x="24.0" y="32.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="17" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">Q2 — shortages that ended, and how long they took</text>
+<text x="24.0" y="54.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">Deliberately empty.</text>
+<rect x="24" y="76" width="932" height="120" rx="6" fill="#f4f3ee"/>
+<text x="490.0" y="118.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="13" fill="#52514e" text-anchor="middle" font-weight="normal" style="">2 capture(s) so far. No shortage has begun and ended inside this record yet.</text>
+<text x="490.0" y="144.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#898781" text-anchor="middle" font-weight="normal" style="">FDA retains 7 resolved records out of 1,623, so no archive anywhere can backfill this.</text>
+<text x="490.0" y="168.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#898781" text-anchor="middle" font-weight="normal" style="">The series starts the week capture started, and this figure fills itself in.</text>
+<text x="24.0" y="236.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">A longitudinal repo should say so on day one rather than ship an empty axis.</text>
 </svg>

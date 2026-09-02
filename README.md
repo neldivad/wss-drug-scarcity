@@ -121,36 +121,42 @@ they serve full per-label version history (metformin v1 2013 → v10 2026).
 
 ## What you can build
 
-All charts come from [examples/visualize.py](examples/visualize.py) — stdlib
+All figures come from [examples/visualize.py](examples/visualize.py) — stdlib
 only, deterministic, regenerated from the derived table.
 
-![Injectables against their market share](examples/charts/fragility-benchmark.svg)
+**The test each one has to pass: after reading it, can someone act without
+running another query?** A count of drugs fails that test — it gives a number
+and sends the reader back for the names. So every figure names the drugs,
+carries their therapeutic class, and states the decision it supports.
 
-**Q8, answered.** Injectables are 7.6% of marketed drug products and 70.8% of
-drugs in shortage — a 9.4x enrichment. The numerator comes from this repo's
-published table; the denominator is stated on the chart, because it describes
-every marketed drug rather than only short ones.
+![What is short, for how long, and in what class](examples/charts/whats-short.svg)
 
-![How long current shortages have lasted](examples/charts/time-on-list.svg)
+**Q1.** The 18 longest-running shortages, named, coloured by class. Anaesthesia
+and analgesia dominate the eight-year-plus tail, and every drug on it is an
+injectable. Supports: what to hold buffer stock of.
 
-**Q1, half-answered.** FDA's own posting dates show how long today's shortages
-have already run. What they cannot show is a shortage that *ended* — which is
-the other half, and Q2.
+![Drugs down to one listed package](examples/charts/single-supplier.svg)
 
-![Packages left per shorted drug](examples/charts/supply-concentration.svg)
+**Q7.** Six named drugs are down to a single listed package. Supports: which
+substitution plans to write before they are needed. A shortlist to check, not
+a verdict — packages not on the shortage list are invisible here.
 
-**Q7/Q4.** Counting packages per drug rather than tracking companies, so
-acquisitions and renames cannot distort the series.
+![GMP import bans by year and origin](examples/charts/enforcement-year.svg)
 
-![Firms barred from importing](examples/charts/import-bans.svg)
-
-**Q6, with the caveat on the chart itself.** Raw counts, no denominator — see
-Q12 before quoting any of them.
+**Q6.** Bans by year of first listing, split China / India / rest of world.
+Additions have run at 30-49 a year since 2023 against 7-24 before 2016, and
+China plus India are now most of each year's additions. Supports: whether the
+qualified-supplier base is narrowing, and where. Raw counts, no denominator —
+read Q12 first.
 
 ![Shortage duration, deliberately empty](examples/charts/shortage-duration.svg)
 
 **Q2, deliberately empty.** No shortage has begun and ended inside this record
-yet, and no archive anywhere can backfill it. The chart fills itself in.
+yet, and no archive anywhere can backfill it. The figure fills itself in.
+
+Palette is the dataviz reference instance, categorical slots in fixed order,
+validated rather than eyeballed — all checks pass with a contrast warning on
+three slots, which is why every mark carries a visible text label.
 
 ## Using it
 
