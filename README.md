@@ -40,7 +40,9 @@ the next thing to build. Append freely.
 | Q11 | Is scarcity a US artefact or a global one? | blocked — EMA shortage page 404s, needs casing |
 | Q12 | What share of a country's registered sites are banned? | blocked — DECRS is JavaScript-gated, no public denominator |
 | Q13 | **Why doesn't someone else just make it?** | **answered: 51% of every product ever approved for these drugs is discontinued** |
-| Q14 | Do suppliers leave *before* a shortage or after it? | needs a new source — Drugs@FDA keeps the count, not the date (entry written, paused on cost) |
+| Q14 | Do suppliers leave *before* a shortage or after it? | needs a new source — entry written, paused pending a frozen cohort (~0.7 MB/yr, not 114) |
+| Q15 | How big is the gap, in units? | **not observable — nobody publishes demand.** Delivered volume against its own trend is the closest proxy |
+| Q16 | Which shortages mean-revert, and which stop reverting? | forward: our own capture builds it. backward: **blocked, tested and failed** |
 
 ## What the first capture already shows
 
@@ -100,6 +102,44 @@ Healthcare, Sun Pharmaceutical, Huons). Three of 466 says nothing about
 causation. Whether a ban is *followed* by a shortage is only visible if both
 lists are sampled over time.
 
+## Two things this repo cannot do, tested rather than assumed
+
+**Q15 — there is no quantitative gap.** `availability` is a three-level
+ordinal (Unavailable / Limited / Available), and that is genuinely all FDA
+publishes. A gap is demand minus supply, and **nobody publishes demand** — not
+FDA, not CMS, not the manufacturers. What is observable is delivered volume,
+so the closest defensible measure is supply against its own prior trend, never
+a shortfall figure.
+
+**Q16 — the backward episode series does not exist, and the obvious proxy
+fails.** Every figure in this repo shows shortages that are *still* open,
+which is the tail that never mean-reverted. The episodes that started and
+ended — and the moment a drug stopped recovering — are the more interesting
+population, and FDA deleted them.
+
+The obvious workaround is to reconstruct episodes from volume. It was tried
+and it does not work. Medicaid State Drug Utilization has units reimbursed per
+NDC per quarter back to 1991, but for dopamine — continuously short since
+November 2017 — reported volume *rose* through 2019 and the series is
+dominated by reporting noise:
+
+```
+2016Q3  100,500  ##################
+2017Q4  116,798  #####################     <- shortage begins here
+2018Q1  268,041  ##################################################
+2019Q3  288,921  ######################################################
+2021Q2   33,789  ######
+```
+
+Same root cause as the NADAC result below: Medicaid is outpatient pharmacy
+data, and 71% of this list is hospital injectables. CMS Part B claims per
+HCPCS is the structurally correct series for that population and joins through
+the same NDC-HCPCS crosswalk — untested here, and the honest next thing to try.
+
+Going *forward* Q16 needs no proxy at all: an NDC leaving the list is an
+episode ending, and `examples/queries.sql` already detects it. That is what
+twelve months of capture buys.
+
 ## The price and volume axes already exist
 
 Neither is captured here. Both are CMS-archived, and both join on NDC.
@@ -134,6 +174,11 @@ every drug old enough to have a price history has been in shortage for the
 | `fda.importalert.66-41` | unapproved-drugs DWPE list, 6.5 MB HTML, 1,793 firms | monthly | **yes** — delistings vanish |
 | `fda.nsde.marketing` | 666,787 products, marketing start/end | — | no — **paused on purpose** |
 | `fda.drugsfda.applications` | 29,298 applications, current marketing_status | — | yes — **paused pending a cost decision (Q14)** |
+
+[`reference/`](reference/) holds frozen lookups — one-time extracts from
+sources that keep their own history, committed so a question stays answerable
+without a capture budget. `drugsfda-attrition-2026-09-03.csv` is 4 KB and
+answers Q13 permanently.
 
 `fda.nsde.marketing` is committed as `paused` because FDA retains products
 after they stop being marketed, so capture would add nothing. The entry exists

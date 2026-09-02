@@ -1,29 +1,34 @@
-# PAUSED PENDING A COST DECISION — see Q14 in the README.
+# PAUSED — needs a frozen cohort before it can go active. See Q14.
 #
-# Drugs@FDA holds every approved application and each product's CURRENT
-# marketing_status: Prescription, Over-the-counter, or Discontinued. It
-# retains discontinued applications (14,801 discontinued products across the
-# database), so the LEVEL of supplier attrition is answerable today without
-# capture — 51% of products ever approved for the drugs now in shortage are
-# discontinued, and cefotaxime has 40 approvals with none still marketed.
+# WHAT IT ANSWERS. Drugs@FDA gives each product's CURRENT marketing_status
+# (Prescription / Over-the-counter / Discontinued) but NO discontinuation
+# date — not in the API, and not in FDA's own bulk MarketingStatus.txt, which
+# is `MarketingStatusID | ApplNo | ProductNo` and nothing else. So the LEVEL
+# of supplier attrition is answerable today (see reference/) and the TIMING is
+# destroyed in place. Watching the count per molecule turns each exit into a
+# dated event, which is the whole of Q14.
 #
-# What it does NOT keep is WHEN. marketing_status is a current-state field
-# with no discontinuation date and no history: the transition Prescription ->
-# Discontinued is overwritten in place. So "did suppliers leave before the
-# shortage or after it" is destroyed, and that is the question Q14 needs.
+# WHY count= AND NOT THE FULL DATABASE. Capturing all 29,298 applications
+# costs ~117 MB raw / ~9.5 MB compressed per capture — ~114 MB/yr monthly,
+# against the repo's 31 MB/yr. A `count=products.marketing_status` query
+# returns exactly the numbers this question needs:
 #
-# The cost: 29,298 applications over 30 paged endpoints, ~117 MB raw and
-# ~9.5 MB compressed per capture. Monthly that is ~114 MB/yr of git growth
-# against the repo's current ~31 MB/yr — a 4x increase, 1 GB in roughly seven
-# years instead of thirty. Real, affordable, and not mine to spend unasked.
+#     {"Discontinued": 33, "Prescription": 4}
 #
-# The cheaper alternative if that is too much: a frozen cohort of molecules
-# (wss.cohort) rather than the whole database. More design, far fewer bytes,
-# and it keeps the dead members that make attrition visible in the first place.
+# in about 400 bytes. A 150-molecule cohort is ~0.7 MB/yr — roughly 150x
+# cheaper than the full capture, for strictly more signal per byte.
+#
+# WHAT IS STILL MISSING: the cohort. Molecules must be chosen ONCE, on stated
+# criteria, and followed forever including the ones that die — `wss.cohort`,
+# selected by hand and committed, never re-picked on a cron. Selecting "the
+# drugs short today" every quarter would delete every shortage that resolved,
+# which is the exact survivorship failure this repo exists to avoid. One
+# endpoint per cohort molecule goes below; the single entry here is the
+# worked example, and it stays paused until the cohort exists.
 source_id: fda.drugsfda.applications
 status: paused
 cadence: monthly
-schema_id: fda-drugsfda.v1
+schema_id: fda-drugsfda-count.v1
 
 publisher: US Food and Drug Administration
 publisher_tier: first_party
@@ -33,20 +38,18 @@ personal_data: none
 storage: git
 
 notes: >-
-  Thirty endpoints of 1,000 applications. Paginate by skip; openFDA caps skip
-  at 25,000, so the tail needs a search filter rather than a deeper skip once
-  the database passes that. The parser emits meta.results.total so growth past
-  the configured pages shows up in the data instead of silently truncating.
+  Ingredient names are the join key and they are messy — 13 of 70 shortage
+  drugs did not resolve to an application on a plain name match. The cohort
+  file should carry a checked ingredient string per molecule rather than
+  deriving one from the shortage feed's generic_name at capture time.
 
 endpoints:
-  - url: "https://api.fda.gov/drug/drugsfda.json?limit=1000&skip=0"
+  - url: "https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name:%22DOPAMINE+HYDROCHLORIDE%22&count=products.marketing_status"
     delay_seconds: 5
-    timeout_seconds: 60
 
 gates:
   expect_status: 200
-  min_bytes: 1000000
+  min_bytes: 150
   content_type_any: [json]
-  must_contain: ["application_number", "marketing_status"]
+  must_contain: ["results", "term"]
   must_not_contain: ["NOT_FOUND"]
-  max_shrink_pct: 30
