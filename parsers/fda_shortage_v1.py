@@ -15,6 +15,10 @@ values, ambiguous between "sum" and "latest". Every aggregate is a downstream
 GROUP BY on the entity prefix instead.
 
 `status_code`: 0 = Resolved, 1 = Current, 2 = To Be Discontinued.
+`is_injectable`: 1 if the dosage form is an injection. Categorical facts are
+encoded as 0/1 metrics rather than left in the raw archive, so the repo's
+headline finding (injectables are 7.6% of marketed products but 71% of
+shortages) is reproducible from the published table alone.
 
 One package NDC can carry several records (different presentations of the
 same package, or a re-listing). They are merged per NDC, and where they
@@ -114,8 +118,13 @@ def parse(body: bytes, ctx: derive.ParseContext):
             acc["last_update"] = max(
                 last_update, acc.get("last_update", last_update))
 
+        injectable = int(
+            "inject" in (record.get("dosage_form") or "").lower())
+        acc["is_injectable"] = max(injectable, acc.get("is_injectable", 0))
+
     _UNITS = {"status_code": "code", "availability": "ordinal",
-              "first_listed": "yyyymmdd", "last_update": "yyyymmdd"}
+              "first_listed": "yyyymmdd", "last_update": "yyyymmdd",
+              "is_injectable": "bool"}
 
     for entity, acc in merged.items():
         yield derive.Observation(

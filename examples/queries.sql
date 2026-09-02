@@ -5,17 +5,40 @@
 -- Entity ids are composite, so every aggregate is a prefix GROUP BY:
 --   drug:<generic>/ndc:<ndc11>
 --   country:<country>/firm:<firm>
+--
+-- CURRENT STATE IS PER ENTITY, NOT PER TIMESTAMP. The shortage feed is paged,
+-- and each endpoint carries its own fetch time, so filtering on
+-- `observed_at = (SELECT max(observed_at) ...)` silently keeps only the last
+-- page — it drops a third of the drugs and nothing warns you. Take the newest
+-- row per entity instead. That is what `latest_state` does, and every query
+-- below builds on it.
 
 CREATE OR REPLACE VIEW obs AS
 SELECT * FROM read_csv_auto('derived/observations/*.csv', union_by_name=true);
 
--- Q8. Dosage-form fragility needs a denominator; this is the numerator half.
+CREATE OR REPLACE VIEW latest_state AS
+SELECT * FROM (
+  SELECT *, row_number() OVER (
+    PARTITION BY series_id, entity_id, metric ORDER BY observed_at DESC
+  ) AS rn
+  FROM obs
+) WHERE rn = 1;
+
+-- Q8. Dosage-form fragility needs a denominator. This is the numerator half.
 -- status_code = 1 is Current: 70 generics at first capture. Dropping the
 -- status filter gives 239, which counts discontinued and resolved packages
 -- too and is NOT the shortage figure.
 SELECT count(DISTINCT split_part(entity_id, '/', 1)) AS generics_in_shortage
-FROM obs
+FROM latest_state
 WHERE metric = 'status_code' AND value = 1;
+
+-- Q8b. The full finding, reproducible from this table alone: what share of
+-- packages in shortage are injectable? (Market denominator is 7.6% — openFDA
+-- /drug/ndc.json by dosage_form — so this is a ~9x enrichment.)
+SELECT round(100.0 * avg(i.value), 1) AS pct_injectable
+FROM latest_state i
+JOIN latest_state s USING (entity_id)
+WHERE i.metric = 'is_injectable' AND s.metric = 'status_code' AND s.value = 1;
 
 -- Q1. Duration. This is the query that CANNOT be answered from one capture,
 -- and becomes answerable as weeks accrue: the first and last week each NDC
@@ -56,10 +79,8 @@ ORDER BY drug, week;
 -- because it counts a field rather than resolving an entity.
 SELECT split_part(entity_id, '/', 1) AS drug,
        count(DISTINCT entity_id)     AS packages_listed
-FROM obs
-WHERE metric = 'listed' AND source_id = 'fda.shortages.current'
-  AND observed_at = (SELECT max(observed_at) FROM obs
-                     WHERE source_id = 'fda.shortages.current')
+FROM latest_state
+WHERE metric = 'status_code' AND value = 1
 GROUP BY 1
 HAVING packages_listed = 1
 ORDER BY drug;
@@ -68,10 +89,8 @@ ORDER BY drug;
 -- see Q12 in the README before quoting any of these numbers.
 SELECT split_part(entity_id, '/', 1) AS country,
        count(*)                      AS firms
-FROM obs
+FROM latest_state
 WHERE metric = 'listed' AND source_id = 'fda.importalert.66-40'
-  AND observed_at = (SELECT max(observed_at) FROM obs
-                     WHERE source_id = 'fda.importalert.66-40')
 GROUP BY 1
 ORDER BY firms DESC
 LIMIT 12;

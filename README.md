@@ -119,6 +119,39 @@ so the decision is not re-litigated, and because it is the reference table Q7
 joins against. **DailyMed labels were rejected outright** for the same reason:
 they serve full per-label version history (metformin v1 2013 → v10 2026).
 
+## What you can build
+
+All charts come from [examples/visualize.py](examples/visualize.py) — stdlib
+only, deterministic, regenerated from the derived table.
+
+![Injectables against their market share](examples/charts/fragility-benchmark.svg)
+
+**Q8, answered.** Injectables are 7.6% of marketed drug products and 70.8% of
+drugs in shortage — a 9.4x enrichment. The numerator comes from this repo's
+published table; the denominator is stated on the chart, because it describes
+every marketed drug rather than only short ones.
+
+![How long current shortages have lasted](examples/charts/time-on-list.svg)
+
+**Q1, half-answered.** FDA's own posting dates show how long today's shortages
+have already run. What they cannot show is a shortage that *ended* — which is
+the other half, and Q2.
+
+![Packages left per shorted drug](examples/charts/supply-concentration.svg)
+
+**Q7/Q4.** Counting packages per drug rather than tracking companies, so
+acquisitions and renames cannot distort the series.
+
+![Firms barred from importing](examples/charts/import-bans.svg)
+
+**Q6, with the caveat on the chart itself.** Raw counts, no denominator — see
+Q12 before quoting any of them.
+
+![Shortage duration, deliberately empty](examples/charts/shortage-duration.svg)
+
+**Q2, deliberately empty.** No shortage has begun and ended inside this record
+yet, and no archive anywhere can backfill it. The chart fills itself in.
+
 ## Using it
 
 **Reading this data needs nothing** — no key, no account, no clone:
@@ -137,13 +170,28 @@ drug:atropine-sulfate-injection/ndc:00517100425
 country:china/firm:zhejiang-...
 ```
 
+**Current state is per entity, not per timestamp.** The shortage feed is
+paged and each endpoint carries its own fetch time, so filtering on
+`observed_at = max(observed_at)` keeps only the last page — it drops a third
+of the drugs and nothing warns you. Take the newest row per entity;
+`examples/queries.sql` defines a `latest_state` view that does exactly that.
+
 Metrics: `listed` (1 = on the list this week), `status_code` (0 Resolved,
 1 Current, 2 To Be Discontinued), `availability` (0 Unavailable, 1 Limited,
 2 Available), `first_listed` / `last_update` (YYYYMMDD integers, never ages —
 so a re-derive years from now is byte-identical), `product_entries`,
-`firms_listed`, `feed_records_total`.
+`firms_listed`, `feed_records_total`, `is_injectable`.
 
 Every query in [examples/queries.sql](examples/queries.sql) shows the pattern.
+
+## Storage
+
+Roughly **31 MB/year** in git, measured on real captures. The payloads are
+repetitive JSON and HTML that zlib to 4-14% of raw size, so the 12 MB `raw/`
+directory is under 1 MB of actual git objects. At that rate GitHub's 1 GB soft
+warning is three decades out, and object storage is not a decision this repo
+needs to make. If it ever is, `storage: object` on one registry entry moves
+that source to R2 and nothing else changes.
 
 ## Contributing
 

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900.0" height="208.0" viewBox="0 0 900.0 208.0" role="img" aria-label="Q1 — how long current shortages have already lasted">
+<title>Q1 — how long current shortages have already lasted</title>
+<desc>Bar chart of how many drugs in shortage fall into each duration band.</desc>
+<rect width="900.0" height="208.0" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="16" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">Q1 — how long current shortages have already lasted</text>
+<text x="24.0" y="50.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="12" fill="#52514e" text-anchor="start" font-weight="normal" style="">distinct generic drugs in shortage, by years since FDA first listed them (70 drugs)</text>
+<line x1="230.0" y1="66.0" x2="230.0" y2="178.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="230.0" y="192.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">0</text>
+<line x1="415.2" y1="66.0" x2="415.2" y2="178.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="415.2" y="192.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">10</text>
+<line x1="600.3" y1="66.0" x2="600.3" y2="178.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="600.3" y="192.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">20</text>
+<line x1="785.5" y1="66.0" x2="785.5" y2="178.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="785.5" y="192.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="middle" font-weight="normal" style="font-variant-numeric: tabular-nums;">30</text>
+<line x1="230.0" y1="66.0" x2="230.0" y2="178.0" stroke="#c3c2b7" stroke-width="1"/>
+<path d="M230.0,74.0 h107.1 q4,0 4,4 v6.0 q0,4 -4,4 h-107.1 z" fill="#2a78d6"/>
+<text x="220.0" y="85.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">10+ years</text>
+<text x="348.1" y="85.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">6 drugs</text>
+<path d="M230.0,94.0 h477.4 q4,0 4,4 v6.0 q0,4 -4,4 h-477.4 z" fill="#2a78d6"/>
+<text x="220.0" y="105.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">5-10 years</text>
+<text x="718.4" y="105.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">26 drugs</text>
+<path d="M230.0,114.0 h570.0 q4,0 4,4 v6.0 q0,4 -4,4 h-570.0 z" fill="#9ec5f4"/>
+<text x="220.0" y="125.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">2-5 years</text>
+<text x="811.0" y="125.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">31 drugs</text>
+<path d="M230.0,134.0 h51.5 q4,0 4,4 v6.0 q0,4 -4,4 h-51.5 z" fill="#9ec5f4"/>
+<text x="220.0" y="145.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">1-2 years</text>
+<text x="292.5" y="145.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">3 drugs</text>
+<path d="M230.0,154.0 h70.1 q4,0 4,4 v6.0 q0,4 -4,4 h-70.1 z" fill="#9ec5f4"/>
+<text x="220.0" y="165.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#52514e" text-anchor="end" font-weight="normal" style="">under a year</text>
+<text x="311.1" y="165.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="font-variant-numeric: tabular-nums;">4 drugs</text>
+<text x="24.0" y="204.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">Time ON FDA'S LIST, not time unavailable to patients. Ages are FDA's own posting dates; this repo cannot yet measure a shortage that ENDED, which is Q2.</text>
+</svg>
