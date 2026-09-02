@@ -1,0 +1,34 @@
+# Import Alert 66-40: manufacturing sites barred from shipping drugs into the
+# US for failing GMP inspection. 466 firms; China 156, India 109. Additions
+# carry a publish date. REMOVALS CARRY NOTHING — a firm that gets off the
+# list simply disappears, and no record that it was ever there survives.
+source_id: fda.importalert.66-40
+status: active
+cadence: weekly
+schema_id: fda-importalert.v1
+
+publisher: US Food and Drug Administration
+publisher_tier: first_party
+destroys_own_history: true
+licence: "US federal work, no copyright in the US"
+personal_data: none
+storage: git
+
+notes: >-
+  The list carries no FEI, DUNS or registration number — firm name and
+  address are the only keys, so entity resolution across renames and
+  acquisitions is genuinely lossy. Treated as a membership series, not a
+  firm-identity series. One 1.9 MB document; fetch once, never per-firm.
+
+endpoints:
+  - url: "https://www.accessdata.fda.gov/cms_ia/importalert_189.html"
+    delay_seconds: 15
+    timeout_seconds: 60
+
+gates:
+  expect_status: 200
+  min_bytes: 800000
+  content_type_any: [html]
+  must_contain: ["Import Alert 66-40", "div-info"]
+  must_not_contain: ["Page Not Found"]
+  max_shrink_pct: 30

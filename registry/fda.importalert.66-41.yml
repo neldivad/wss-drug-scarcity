@@ -1,0 +1,33 @@
+# Import Alert 66-41: firms shipping unapproved or adulterated drugs — a
+# different population from 66-40 (overseas web sellers and supplement
+# firms, not GMP-failing manufacturers), which is why it is a separate
+# source. 1,921 firms; India 284, China 234.
+source_id: fda.importalert.66-41
+status: active
+cadence: monthly
+schema_id: fda-importalert.v1
+
+publisher: US Food and Drug Administration
+publisher_tier: first_party
+destroys_own_history: true
+licence: "US federal work, no copyright in the US"
+personal_data: none
+storage: git
+
+notes: >-
+  Monthly rather than weekly: 6.5 MB per capture, and this list answers a
+  slower question than 66-40 (which touches drug supply directly). Same
+  parser, same no-stable-identifier caveat.
+
+endpoints:
+  - url: "https://www.accessdata.fda.gov/cms_ia/importalert_190.html"
+    delay_seconds: 15
+    timeout_seconds: 90
+
+gates:
+  expect_status: 200
+  min_bytes: 3000000
+  content_type_any: [html]
+  must_contain: ["Import Alert 66-41", "div-info"]
+  must_not_contain: ["Page Not Found"]
+  max_shrink_pct: 30

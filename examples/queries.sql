@@ -1,0 +1,103 @@
+-- wss-drug-scarcity — the query patterns that matter.
+--
+--   duckdb -c ".read examples/queries.sql"
+--
+-- Entity ids are composite, so every aggregate is a prefix GROUP BY:
+--   drug:<generic>/ndc:<ndc11>
+--   country:<country>/firm:<firm>
+
+CREATE OR REPLACE VIEW obs AS
+SELECT * FROM read_csv_auto('derived/observations/*.csv', union_by_name=true);
+
+-- Q8. Dosage-form fragility needs a denominator; this is the numerator half.
+-- status_code = 1 is Current: 70 generics at first capture. Dropping the
+-- status filter gives 239, which counts discontinued and resolved packages
+-- too and is NOT the shortage figure.
+SELECT count(DISTINCT split_part(entity_id, '/', 1)) AS generics_in_shortage
+FROM obs
+WHERE metric = 'status_code' AND value = 1;
+
+-- Q1. Duration. This is the query that CANNOT be answered from one capture,
+-- and becomes answerable as weeks accrue: the first and last week each NDC
+-- was seen on the list, which is the thing FDA deletes.
+SELECT split_part(entity_id, '/', 1)            AS drug,
+       count(DISTINCT date_trunc('week', observed_at)) AS weeks_seen,
+       min(observed_at)::DATE                   AS first_seen_by_us,
+       max(observed_at)::DATE                   AS last_seen_by_us
+FROM obs
+WHERE metric = 'listed' AND source_id = 'fda.shortages.current'
+GROUP BY 1
+ORDER BY weeks_seen DESC, drug
+LIMIT 20;
+
+-- Q1b. FDA's own first-listed date, for shortages that predate our capture.
+-- Note this is time ON THE LIST, not time unavailable to patients.
+SELECT split_part(entity_id, '/', 1) AS drug,
+       min(value)::BIGINT            AS first_listed_yyyymmdd
+FROM obs
+WHERE metric = 'first_listed' AND source_id = 'fda.shortages.current'
+GROUP BY 1
+ORDER BY 2
+LIMIT 15;
+
+-- Q3. Availability trend per drug. Flat until several weeks accrue — that is
+-- the point, not a bug. 0 Unavailable, 1 Limited, 2 Available.
+SELECT date_trunc('week', observed_at)::DATE AS week,
+       split_part(entity_id, '/', 1)         AS drug,
+       avg(value)                            AS mean_availability,
+       count(*)                              AS packages
+FROM obs
+WHERE metric = 'availability'
+GROUP BY 1, 2
+ORDER BY drug, week;
+
+-- Q4/Q7. Supplier fragility WITHOUT tracking company identity: how many
+-- distinct packages carry each drug. Immune to renames and acquisitions,
+-- because it counts a field rather than resolving an entity.
+SELECT split_part(entity_id, '/', 1) AS drug,
+       count(DISTINCT entity_id)     AS packages_listed
+FROM obs
+WHERE metric = 'listed' AND source_id = 'fda.shortages.current'
+  AND observed_at = (SELECT max(observed_at) FROM obs
+                     WHERE source_id = 'fda.shortages.current')
+GROUP BY 1
+HAVING packages_listed = 1
+ORDER BY drug;
+
+-- Q6. Import-ban membership by country. A RAW COUNT WITH NO DENOMINATOR —
+-- see Q12 in the README before quoting any of these numbers.
+SELECT split_part(entity_id, '/', 1) AS country,
+       count(*)                      AS firms
+FROM obs
+WHERE metric = 'listed' AND source_id = 'fda.importalert.66-40'
+  AND observed_at = (SELECT max(observed_at) FROM obs
+                     WHERE source_id = 'fda.importalert.66-40')
+GROUP BY 1
+ORDER BY firms DESC
+LIMIT 12;
+
+-- Q6b. THE DELISTING DETECTOR — the series nothing else in the world keeps.
+-- Firms present in the previous capture and absent from the latest one.
+-- Empty until at least two captures exist.
+WITH caps AS (
+  SELECT DISTINCT observed_at FROM obs
+  WHERE source_id = 'fda.importalert.66-40' ORDER BY 1 DESC LIMIT 2
+),
+latest AS (SELECT max(observed_at) AS t FROM caps),
+prior  AS (SELECT min(observed_at) AS t FROM caps)
+SELECT entity_id AS delisted_firm
+FROM obs
+WHERE metric = 'listed' AND source_id = 'fda.importalert.66-40'
+  AND observed_at = (SELECT t FROM prior)
+  AND (SELECT t FROM prior) <> (SELECT t FROM latest)
+  AND entity_id NOT IN (
+    SELECT entity_id FROM obs
+    WHERE metric = 'listed' AND source_id = 'fda.importalert.66-40'
+      AND observed_at = (SELECT t FROM latest))
+ORDER BY 1;
+
+-- Health check: is the feed growing past the two paged endpoints?
+-- If feed_records_total exceeds 2000, add a third endpoint.
+SELECT observed_at::DATE AS day, max(value) AS feed_records_total
+FROM obs WHERE metric = 'feed_records_total'
+GROUP BY 1 ORDER BY 1;

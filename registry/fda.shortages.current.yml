@@ -1,0 +1,35 @@
+# FDA's drug shortage list. The founding source: FDA serves what is short
+# TODAY, and a shortage that ends leaves the feed. On 2026-08-31 the endpoint
+# held 1,173 Current, 443 To Be Discontinued and 7 Resolved — seven, across
+# fourteen years. Nobody can compute how long a US drug shortage lasts.
+source_id: fda.shortages.current
+status: active
+cadence: weekly
+schema_id: fda-shortage.v1
+
+publisher: US Food and Drug Administration
+publisher_tier: first_party
+destroys_own_history: true
+licence: "US federal work, no copyright in the US; https://open.fda.gov/terms/"
+personal_data: none
+storage: git
+
+notes: >-
+  Two pages of 1,000 records cover the current 1,623. The parser emits
+  meta.results.total as `feed_records_total` so growth past 2,000 shows up in
+  the data rather than silently truncating. 1,010 of 1,623 records were
+  touched within 8-30 days, so weekly catches essentially every transition.
+
+endpoints:
+  - url: "https://api.fda.gov/drug/shortages.json?limit=1000&skip=0"
+    delay_seconds: 5
+  - url: "https://api.fda.gov/drug/shortages.json?limit=1000&skip=1000"
+    delay_seconds: 5
+
+gates:
+  expect_status: 200
+  min_bytes: 200000
+  content_type_any: [json]
+  must_contain: ["generic_name", "initial_posting_date"]
+  must_not_contain: ["NOT_FOUND"]
+  max_shrink_pct: 40

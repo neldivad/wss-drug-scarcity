@@ -1,0 +1,33 @@
+# PAUSED ON PURPOSE — this entry documents a decision, not a collection.
+#
+# NSDE carries marketing_start_date and marketing_end_date for 666,787
+# products, and FDA RETAINS products after they stop being marketed (a record
+# with a 2023 end date is still served in 2026). The publisher archives its
+# own history, so capturing it would add nothing. Kept here so the next
+# person does not re-litigate it, and because it is the reference table the
+# shortage series joins against for supplier counts (Q7).
+source_id: fda.nsde.marketing
+status: paused
+cadence: monthly
+schema_id: archive.v1
+
+publisher: US Food and Drug Administration
+publisher_tier: first_party
+destroys_own_history: false
+licence: "US federal work, no copyright in the US; https://open.fda.gov/terms/"
+personal_data: none
+storage: git
+
+notes: >-
+  Rejected for capture, retained for reference. Same verdict as DailyMed SPL
+  labels, which serve full per-label version history and are therefore not in
+  this registry at all.
+
+endpoints:
+  - url: "https://api.fda.gov/other/nsde.json?limit=1"
+    delay_seconds: 5
+
+gates:
+  expect_status: 200
+  min_bytes: 400
+  content_type_any: [json]

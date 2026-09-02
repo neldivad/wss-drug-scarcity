@@ -1,0 +1,5 @@
+source_id,first_success_at,last_success_at,last_attempt_at,consecutive_failures,expected_interval_h,staleness_h,gate_fail_rate_28d,status
+fda.nsde.marketing,,,,0,720,,,paused
+fda.importalert.66-40,2026-09-02T13:22:06Z,2026-09-02T13:22:06Z,2026-09-02T13:22:06Z,0,168,0.2,0.000,active
+fda.importalert.66-41,2026-09-02T13:23:25Z,2026-09-02T13:23:25Z,2026-09-02T13:23:25Z,0,720,0.1,0.000,active
+fda.shortages.current,2026-09-02T13:22:41Z,2026-09-02T13:23:11Z,2026-09-02T13:23:11Z,0,168,0.1,0.000,active
