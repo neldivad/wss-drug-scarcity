@@ -29,7 +29,7 @@ the next thing to build. Append freely.
 | --- | --- | --- |
 | Q1 | Mean shortage duration — per substance, per drug, per category | needs ~12 months — **the founding question** |
 | Q2 | Which shortages resolve, and which never do? | needs ~12 months |
-| Q3 | Does availability track price? | answerable for 48.5% of the list — but see the ASP caveat |
+| Q3 | Does availability track price? | price side answerable for 48.5% of the list (see the ASP caveat); **severity side answered — 7 drugs have no available package at all** |
 | Q4 | Which suppliers are fragile? | reframed — count suppliers per substance, never track company identity |
 | Q5 | Does an import ban predict a shortage? (−12…+12 months) | needs ~12 months — both axes verified, only shortage state is missing |
 | Q6 | How long do firms stay banned, and who gets off? | needs ~26 weeks — additions dated, **removals destroyed** |
@@ -220,6 +220,21 @@ once each drug is collapsed to one date. And the age bands are **not** an
 onset distribution — a shortage that ended left the feed, so the recent bands
 are understated relative to reality. Fixing that is Q16, and only accumulated
 capture fixes it.
+
+![Availability of drugs in shortage](examples/charts/availability.svg)
+
+**Q3, the severity view.** Every other figure here measures how *long*; this
+one measures how *bad*. Seven drugs in shortage have no available package at
+all — ifosfamide, desmopressin and sufentanil are at zero. Supports: triage,
+because a rationed drug needs conservation and an absent one needs a
+substitute today.
+
+Two findings fall out of it. Injectables are **28%** unavailable against 19%
+for other forms, so they are not merely over-represented in shortage but worse
+affected once short. And **oncology is the worst class by rate** (42% of its
+packages unavailable) while anaesthesia has the most packages — severity and
+volume rank differently, which is the denominator trap this repo keeps warning
+about, showing up in its own data.
 
 ![Approved makers left per shorted drug](examples/charts/supplier-attrition.svg)
 

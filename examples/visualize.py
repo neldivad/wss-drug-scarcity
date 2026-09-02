@@ -10,6 +10,7 @@ drugs, gives their therapeutic class, and puts the decision in the subtitle.
 
   whats-short.svg        Q1  which drugs, how long, what class — the stockpile list
   shortage-age.svg       Q1  age structure of the list: churn against a permanent core
+  availability.svg       Q3  severity right now — which drugs have nothing available
   supplier-attrition.svg Q13 how many approved makers each shorted drug has left
   single-supplier.svg    Q7  drugs down to one listed package — the watchlist
   enforcement-year.svg   Q6  GMP import bans by year and origin — is the base shrinking
@@ -49,6 +50,12 @@ OTHER = "#8a8880"
 # (#9ec5f4 failed that last check at 1.74:1).
 HUE = SLOTS[0]
 HUE_SOFT = "#6ba3e6"
+# Status palette, fixed and never themed. Availability IS a status — this is
+# the legitimate use, not a series colour. warning/serious are sub-3:1 on a
+# light surface by design, so every segment carries a visible label.
+CRITICAL = "#d03b3b"
+WARNING = "#fab219"
+GOOD = "#0ca30c"
 FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif'
 
 # Q1's context number. NOT in the derived table: it describes every marketed
@@ -486,6 +493,122 @@ def q1_age_structure(obs) -> str:
     return f"{out.relative_to(REPO)} — {total} drugs, {recent / total:.0%} under two years"
 
 
+def q3_availability(obs) -> str:
+    """Severity, not duration: which drugs have no available package today.
+
+    `availability` is the only severity signal FDA publishes, and it is the
+    difference between a drug that is rationed and one that is simply gone.
+    Every other figure here measures how LONG; this one measures how BAD.
+    """
+    src = "fda.shortages.current"
+    current = {e for e, v in state(obs, src, "status_code").items() if v == "1"}
+    avail = {e: int(v) for e, v in state(obs, src, "availability").items()
+             if e in current}
+
+    per: dict[str, list[int]] = defaultdict(lambda: [0, 0, 0])
+    for entity, value in avail.items():
+        per[entity.split("/", 1)[0]][value] += 1
+    rows = [(drug, counts) for drug, counts in per.items() if sum(counts) >= 3]
+    rows.sort(key=lambda r: (-r[1][0] / sum(r[1]), -sum(r[1]), r[0]))
+    rows = rows[:16]
+
+    total_pk = sum(sum(c) for c in per.values())
+    total_un = sum(c[0] for c in per.values())
+    none_left = sum(1 for _, c in per.items() if c[1] + c[2] == 0)
+
+    # Severity by dosage form: injectables are not merely over-represented in
+    # shortage, they are also the worst affected once short.
+    inj = state(obs, src, "is_injectable")
+    form = {True: [0, 0], False: [0, 0]}
+    for entity, value in avail.items():
+        bucket = form[inj.get(entity) == "1"]
+        bucket[0] += 1
+        bucket[1] += 1 if value == 0 else 0
+
+    # Severity by class: the class with the MOST packages is not the class
+    # with the worst rate — exactly the denominator trap this repo warns about.
+    cats = state(obs, src, "in_category")
+    per_cat: dict[str, list[int]] = defaultdict(lambda: [0, 0])
+    drug_cats: dict[str, list[str]] = defaultdict(list)
+    for entity in cats:
+        drug, category = entity.split("/", 1)
+        drug_cats[drug].append(category.replace("category:", ""))
+    for entity, value in avail.items():
+        for category in drug_cats.get(entity.split("/", 1)[0], []):
+            per_cat[category][0] += 1
+            per_cat[category][1] += 1 if value == 0 else 0
+    ranked_cats = sorted(((c, n, u) for c, (n, u) in per_cat.items() if n >= 20),
+                         key=lambda r: -r[2] / r[1])
+    worst_cat = ranked_cats[0] if ranked_cats else ("", 1, 0)
+    biggest_cat = max(per_cat.items(), key=lambda kv: (kv[1][0], kv[0])) \
+        if per_cat else ("", [1, 0])
+
+    width, left, right = 980.0, 300.0, 190.0
+    row_h, gap = 17.0, 8.0
+    body = [txt(24, 32, "Q3 — which shortages are rationed, and which have "
+                "nothing left", size=17, fill=INK, weight="600")]
+    lead, dy = para(24, 54, "FDA reports availability per package. Decision "
+                    "this supports: triage. A drug with limited supply needs "
+                    "conservation; a drug with none needs a substitute today, "
+                    "and the two are not the same problem.",
+                    size=12, fill=INK2, chars=118)
+    body += lead
+    legend_y = 54 + dy + 10
+    top_y = legend_y + 28
+    plot_bottom = top_y + len(rows) * (row_h + gap)
+    height = plot_bottom + 76
+    span = width - left - right
+
+    body += legend([("unavailable", CRITICAL), ("limited", WARNING),
+                    ("available", GOOD)], 24, legend_y)
+
+    for i, (drug, counts) in enumerate(rows):
+        y = top_y + i * (row_h + gap)
+        n = sum(counts)
+        x = left
+        for value, colour in ((0, CRITICAL), (1, WARNING), (2, GOOD)):
+            if not counts[value]:
+                continue
+            w = counts[value] / n * span
+            # 2px surface gap between stacked segments
+            body.append(bar(x, y, max(1.5, w - 2), row_h, colour, r=3))
+            x += w
+        name = drug.replace("drug:", "").replace("-", " ")
+        name = name if len(name) <= 40 else name[:39] + "…"
+        body.append(txt(left - 10, y + row_h - 4, name, size=11, fill=INK2,
+                        anchor="end"))
+        body.append(txt(left + span + 12, y + row_h - 4,
+                        f"{counts[0]} of {n} unavailable", size=11, fill=INK,
+                        weight="600", tab=True))
+
+    note, ndy = para(24, plot_bottom + 16,
+                     f"{none_left} drugs in shortage have no available package "
+                     f"at all, and {total_un} of {total_pk} listed packages are "
+                     "unavailable. Injectables are "
+                     f"{form[True][1] / form[True][0]:.0%} unavailable against "
+                     f"{form[False][1] / form[False][0]:.0%} for other forms, so "
+                     "they are not merely over-represented in shortage but worse "
+                     f"affected once short. And {worst_cat[0]} is the worst class "
+                     f"by rate ({worst_cat[2] / worst_cat[1]:.0%} of its packages "
+                     f"unavailable) while {biggest_cat[0]} has the most packages "
+                     "— severity and volume rank differently.",
+                     size=12, fill=INK2, chars=118)
+    body += note
+    foot, _ = para(24, plot_bottom + 22 + ndy,
+                   "Availability is self-reported by the manufacturer and "
+                   "refers to that package, not to what a given hospital can "
+                   "actually obtain. Drugs with fewer than three listed "
+                   "packages are omitted here so a single package does not "
+                   "read as 100%.", size=10, fill=MUTED, chars=150, leading=14)
+    body += foot
+    out = OUT_DIR / "availability.svg"
+    out.write_text(wrap(width, height, "Availability of drugs in shortage",
+                        "Stacked bars of unavailable, limited and available "
+                        "packages for each drug currently in shortage.",
+                        "\n".join(body)), encoding="utf-8")
+    return f"{out.relative_to(REPO)} — {len(rows)} drugs, {none_left} with nothing available"
+
+
 def q13_attrition(obs) -> str:
     """How much of each shorted drug's approved supply base is left.
 
@@ -660,7 +783,7 @@ def main() -> None:
     if not obs:
         raise SystemExit("no observations — run `wss derive` first")
     for line in (q1_whats_short(obs), q1_age_structure(obs),
-                 q13_attrition(obs),
+                 q3_availability(obs), q13_attrition(obs),
                  q7_single_supplier(obs), q6_enforcement(obs),
                  q2_placeholder(obs), q14_placeholder(obs)):
         print(line)

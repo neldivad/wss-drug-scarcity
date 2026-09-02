@@ -169,3 +169,36 @@ SELECT e.entity_id, e.first_loss::DATE, l.first_listed
 FROM exits e LEFT JOIN listed l
   ON replace(e.entity_id, 'molecule:', '') = l.drug
 ORDER BY 1;
+
+-- Q3. SEVERITY, the signal every duration query misses. A drug can sit on the
+-- list for a decade while shipping, or be listed last month with nothing
+-- available at all. 0 unavailable, 1 limited, 2 available.
+SELECT split_part(a.entity_id, '/', 1)                        AS drug,
+       count(*)                                               AS packages,
+       sum(CASE WHEN a.value = 0 THEN 1 ELSE 0 END)           AS unavailable,
+       round(100.0 * sum(CASE WHEN a.value = 0 THEN 1 ELSE 0 END)
+             / count(*), 0)                                   AS pct_unavailable
+FROM latest_state a
+JOIN latest_state s USING (entity_id)
+WHERE a.metric = 'availability' AND s.metric = 'status_code' AND s.value = 1
+GROUP BY 1
+HAVING packages >= 3
+ORDER BY pct_unavailable DESC, packages DESC;
+
+-- Q3b. Severity by therapeutic class. The class with the MOST packages is not
+-- the class with the worst rate — anaesthesia leads on volume, oncology on
+-- severity. Always rank on the rate, never the count.
+SELECT replace(split_part(c.entity_id, '/', 2), 'category:', '') AS therapeutic_class,
+       count(*)                                                  AS packages,
+       round(100.0 * sum(CASE WHEN a.value = 0 THEN 1 ELSE 0 END)
+             / count(*), 0)                                      AS pct_unavailable
+FROM latest_state a
+JOIN latest_state c
+  ON split_part(c.entity_id, '/', 1) = split_part(a.entity_id, '/', 1)
+ AND c.metric = 'in_category'
+JOIN latest_state s ON s.entity_id = a.entity_id
+ AND s.metric = 'status_code' AND s.value = 1
+WHERE a.metric = 'availability'
+GROUP BY 1
+HAVING packages >= 20
+ORDER BY pct_unavailable DESC;
